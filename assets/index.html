@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="en" style=""><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-tertiary-container": "#fcfcff", "surface-container-low": "#f2f3ff", tertiary: "#006387", "on-tertiary": "#ffffff", "tertiary-fixed-dim": "#7bd0ff", secondary: "#2260a2", outline: "#707881", "surface-dim": "#d2d9f4", "secondary-container": "#81b6fd", "surface-container-high": "#e2e7ff", "on-primary-fixed": "#001d31", "on-error": "#ffffff", "inverse-primary": "#93ccff", "on-error-container": "#93000a", "on-secondary-container": "#004681", "on-tertiary-fixed": "#001e2c", background: "#faf8ff", "surface-container-highest": "#dae2fd", "on-secondary": "#ffffff", "primary-container": "#007bb9", "surface-container-lowest": "#ffffff", "surface-container": "#eaedff", "primary-fixed-dim": "#93ccff", "inverse-surface": "#283044", "on-tertiary-fixed-variant": "#004c69", "on-primary-container": "#fdfcff", "tertiary-container": "#007da9", surface: "#faf8ff", "on-surface-variant": "#3f4850", "on-primary-fixed-variant": "#004b73", "on-secondary-fixed": "#001c39", error: "#ba1a1a", "primary-fixed": "#cce5ff", "tertiary-fixed": "#c4e7ff", "secondary-fixed-dim": "#a4c9ff", "outline-variant": "#bfc7d2", "on-secondary-fixed-variant": "#004883", primary: "#006194", "inverse-on-surface": "#eef0ff", "on-background": "#131b2e", "surface-bright": "#faf8ff", "surface-tint": "#006398", "secondary-fixed": "#d4e3ff", "on-primary": "#ffffff", "error-container": "#ffdad6", "on-surface": "#131b2e", "surface-variant": "#dae2fd"}, borderRadius: {DEFAULT: "0.5rem", lg: "1rem", xl: "1.5rem", full: "9999px"}, spacing: {"space-md": "1rem", "space-sm": "0.5rem", gutter: "1rem", margin: "1.5rem", "space-xl": "2rem", "space-xs": "0.25rem", "space-lg": "1.5rem", "margin-mobile": "1rem", "gutter-mobile": "0.75rem"}, fontFamily: {"body-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"]}, fontSize: {"body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "body-sm": ["12px", {lineHeight: "16px", fontWeight: "500"}], "headline-lg": ["32px", {lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700"}], "label-sm": ["10px", {lineHeight: "14px", letterSpacing: "0.04em", fontWeight: "700"}], "headline-sm": ["18px", {lineHeight: "26px", fontWeight: "600"}], "headline-lg-mobile": ["26px", {lineHeight: "34px", letterSpacing: "-0.02em", fontWeight: "700"}], "body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "label-lg": ["14px", {lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "700"}], "label-md": ["12px", {lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "700"}], "headline-md": ["22px", {lineHeight: "30px", letterSpacing: "-0.01em", fontWeight: "700"}], display: ["40px", {lineHeight: "48px", letterSpacing: "-0.03em", fontWeight: "800"}]}}}};</script><style>@layer base{html,body{min-height:100%;margin:0;padding:0;background-color:#f8fbff;color:#0c1e36;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}}::-webkit-scrollbar{display:none;}</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head><body class="bg-surface font-body-md text-body-md text-on-surface antialiased min-h-screen flex flex-col"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl pt-safe"><div class="h-16 px-gutter flex items-center justify-between"><div class="flex items-center gap-space-sm"><img alt="Terserah App Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZ19QayzkeQHBNIrra63VTVyDv62vjmpAnHMpHYf4VXZm_V9MEKEsuqBktzR12h2Ar4IoXaKMC6RCz9dAUb9el6G0LcfYcwuyOi1xx68eWYY9LZZYx_KHklN6gNVBlH5TIFr06k0q6ujOeAOSKapsbw2b65_JeTlJNjlTVsCq1UGGpued3O1nHUBC-gvVrlqaPIMXYG73m_fQ6zfLNnJ-c6IRI8pbMK_sZqGkMFe9HlOnWjjBOc-6"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Terserah</span></div><div class="flex items-center gap-space-sm"><span class="font-label-md text-label-md text-on-surface-variant hidden sm:inline-block">Home</span></div></div></header><main class="flex-1 w-full bg-surface pt-16 pb-28"><div class="flex flex-col w-full max-w-md mx-auto px-margin-mobile pb-6 gap-y-6"><!-- Greeting & Mood Header -->
+<section class="flex flex-col gap-y-3 pt-2">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<div class="flex items-center gap-1.5">
+<span class="font-headline-md text-headline-md text-on-surface">Halo, Dodo!</span>
+<span class="text-2xl animate-bounce">👋</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Hungry but zero clue? We got you covered.</p>
+</div>
+<!-- Playful Mascot Quick Avatar -->
+<div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center shadow-sm cursor-pointer active:scale-95 transition-transform" onclick="openBottomSheet()">
+<span class="material-symbols-outlined text-secondary text-2xl" style='font-variation-settings: "FILL" 1;'>restaurant_menu</span>
+</div>
+</div>
+<!-- Active Geolocation Pill -->
+<div class="flex items-center justify-between bg-surface-container-low px-4 py-2.5 rounded-full shadow-sm">
+<div class="flex items-center gap-2 min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px]" style='font-variation-settings: "FILL" 1;'>location_on</span>
+<div class="truncate">
+<span class="font-label-md text-label-md text-on-surface font-bold">Menteng, Jakarta Pusat</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">• Radius 3 km</span>
+</div>
+</div>
+<button class="flex items-center gap-0.5 text-primary font-label-md text-label-md shrink-0 active:scale-95 transition-transform" onclick="openBottomSheet()" type="button">
+<span class="">Ubah</span>
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</button>
+</div>
+</section>
+<!-- Interactive Hero Teaser Card: Terserah Instant Spin -->
+<div class="flex flex-col gap-1.5"><section class="bg-surface-container-low p-3.5 rounded-2xl flex items-center justify-between border border-surface-container-high/60 shadow-xs relative overflow-hidden"><div class="flex items-center gap-3 min-w-0"><div class="w-12 h-12 rounded-xl bg-primary-container/15 flex items-center justify-center shrink-0 border border-primary-container/20"><span class="material-symbols-outlined text-primary text-2xl" style='font-variation-settings: "FILL" 1;'>local_fire_department</span></div><div class="min-w-0"><div class="flex items-center gap-1.5"><span class="font-label-md text-label-md text-on-surface font-bold truncate">Ayam Geprek Bensu</span><span class="text-[10px] bg-secondary-container text-on-secondary-container px-1.5 py-0.5 rounded font-extrabold uppercase shrink-0">SPONSOR</span></div><p class="font-body-sm text-body-sm text-on-surface-variant truncate">Paket Kenyang Mulai 22rb + Gratis Es ...</p></div></div><button class="px-3.5 py-1.5 rounded-full bg-primary text-on-primary font-label-sm text-label-sm font-bold shadow-sm active:scale-95 transition-transform shrink-0 ml-2" onclick="alert('Membuka penawaran Ayam Geprek Bensu!');" type="button">Pesan</button></section><div class="flex items-center justify-center gap-1"><div class="w-4 h-1 rounded-full bg-primary"></div><div class="w-1.5 h-1 rounded-full bg-surface-container-highest"></div><div class="w-1.5 h-1 rounded-full bg-surface-container-highest"></div></div></div><section class="relative bg-gradient-to-br from-[#0284c7] via-[#0369a1] to-[#075985] rounded-3xl p-5 text-on-primary shadow-xl overflow-hidden cursor-pointer active:scale-[0.99] transition-transform" onclick="openBottomSheet()">
+<!-- Decorative SVG Pattern -->
+<div class="absolute -right-8 -bottom-8 opacity-15 pointer-events-none">
+<svg fill="currentColor" height="180" viewbox="0 0 100 100" width="180">
+<circle cx="50" cy="50" fill="none" r="45" stroke="white" stroke-dasharray="10 6" stroke-width="6"></circle>
+<path d="M50 15 L50 85 M15 50 L85 50" stroke="white" stroke-width="6"></path>
+</svg>
+</div>
+<div class="relative z-10 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full font-label-sm text-label-sm text-white font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">bolt</span> INSTANT DECISION
+</span>
+<span class="text-xs bg-[#bae6fd] text-[#075985] px-2 py-0.5 rounded-full font-bold shadow-xs">1-Tap Ready</span>
+</div>
+<div>
+<h3 class="font-headline-md text-headline-md font-extrabold tracking-tight">Terlalu Malas Milih?</h3>
+<p class="font-body-md text-body-md text-white/90 mt-1">Biarkan mesin takdir Terserah App yang memutuskan tempat makanmu sekarang juga!</p>
+</div>
+<div class="pt-2 flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Nasi Goreng" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBizmJ2qyKSS0T4DG3X4pqY6Gcg4ILuwyqd9puWgClaCozDRgfAUQJiCwKAV9bh-7W4xdJEuA8KZAg_gJ1gztdPMEEt6ZPTuOfkC7SF1C0KtcwZBtvlT5rLNCpSQ9lHoM5eUry7TkwuYLRZCdNbVXWYqu5yQZ-9w1cj0fPpP24lfPyYSATpHYzEhqS13i4iV5FL-4nIKDEspjhsjnA1NTX0fu08E4QQ1c2zi9UH0otsvQte_a_rFY3M"/>
+<img alt="Ayam Sambal" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf0I8qIc2Y98zPLoUQ8mj4kbKDBqqp37HtWcst-odlc4PeKdvroOlQTgP64rcwCL2UpkuJLzAyy3ZoOscKJYk9ch-f9vCQDYKNBOpujs9uEu97kxKITDu2filFcIsvjEE3OWoiFYYIbTIlxFpD0l_PxWiDsXbgu4HPk-TEYCgiEl7bOWQWw0q1YtjAcmRGmo_mDaIKklqk_FQ3Db6fsOboOdVjEHVlloEmMXkBugcXodVrWyLCkSPF"/>
+<img alt="Bakmi" class="w-8 h-8 rounded-full border-2 border-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1j9H4boXSxY2Zz611HT55dakxpR1xghk7_O1D98AzrpotYXkvrjBPUZqAKXpqQzJK7NkhyMGcIFOKekRVTIT1xeKPBSkqeCsEwy313cBdhL8KKAmBhbU02DSMxeqx1BMWerwRDsj-Bed6JdYiNvuvRVfxxgvlDVO0zYAC9oD0Fp0qotp-r2cKWC_mpj5nwIKNdMMANJh7t6PNIT6KXpo58X7fZI6IZQWrtbqhjbu5y3Oy8SCA42EM"/>
+</div>
+<div class="font-label-sm text-label-sm text-on-primary font-semibold flex items-center gap-1.5">
+<span class="">Atur &amp; Spin</span>
+<span class="bg-white text-primary px-2.5 py-1 rounded-full font-bold shadow-sm flex items-center gap-1">Cari 🎲</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Quick Filter Trigger Bar -->
+<section class="bg-surface-container-low p-3.5 rounded-2xl flex items-center justify-between border border-surface-container-high/60">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-primary-container/15 text-primary flex items-center justify-center font-bold">
+<span class="material-symbols-outlined text-[20px]">tune</span>
+</div>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-bold">Kriteria Tersimpan</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">30k - 75k • Santai (&lt;3km) • 4.0+ ⭐</div>
+</div>
+</div>
+<button class="text-primary font-label-sm text-label-sm font-bold bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-xs active:scale-95 transition-transform" onclick="openBottomSheet()" type="button">
+Ubah
+</button>
+</section>
+<!-- Popular Picks In Your Area -->
+<section class="flex flex-col gap-3">
+<div class="flex items-center justify-between px-1">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Favorit Korban "Terserah"</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Paling sering dapet bintang lima minggu ini</p>
+</div>
+<button class="text-primary font-label-sm text-label-sm font-bold flex items-center gap-0.5" type="button">
+<span class="">Lihat Semua</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+</button>
+</div>
+<div class="grid grid-cols-1 gap-3">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-3.5 rounded-2xl shadow-sm flex items-center gap-3.5 transition-all hover:shadow-md cursor-pointer">
+<img class="w-20 h-20 rounded-xl object-cover shrink-0" data-alt="Gultik Mahakam Blok M" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgyf-rG9XINqPabUQwLbc8Gdu1aTZIvlrBMFXx1k8XZOIuO4pkTI-INL0xc0FGa9gVOsA2wt82JduFtzkibOvq47DNUbCZq42cEhA_q4N3tK9cpvdEtPBUZLddYEvjyvC5QkpJ1N2C6-BirC2zGmv2aqD-zwk2NkYlsQGfKnGNKKHUt6Jvs2Honlw8v5eaGNLxuIweMh9CO23w7HyQeFC3RNDG2Y7p5aUU8DJnT2QMkkYYSPDuQEVL"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-full font-semibold">Street Food</span>
+<span class="flex items-center text-xs font-bold text-on-surface">
+<span class="material-symbols-outlined text-amber-500 text-[16px] mr-0.5" style='font-variation-settings: "FILL" 1;'>star</span> 4.8
+</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Gultik Mahakam Blok M</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Gule Tikungan gurih &amp; sambal mantap</p>
+<div class="flex items-center gap-3 mt-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span class="text-primary font-bold">Rp 20k - 35k</span>
+<span class="">•</span>
+<span class="">📍 1.2 km</span>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-3.5 rounded-2xl shadow-sm flex items-center gap-3.5 transition-all hover:shadow-md cursor-pointer">
+<img class="w-20 h-20 rounded-xl object-cover shrink-0" data-alt="Bakmi Gondangdia 1968" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuo6M5ivnvvMBmExuDfXahGannFy4-mwAmRXaNREo7nwq4e4VXbmvgkDMNys2mj9GJKRA1ekHg60TbdJ6PQ7V6k18T22mbcBDUqRCAmhD91MnxFZE4V7mxMJJwhxoUOIUly405aeOqJJqYBubMHnRbczSzGHtM1WlugsVMFruErG54IYmV7ENTat_hIS-rRI-kCI0tsTBtvg6Re-j6RZEdy55m-K9-tcp_WIu1croTUHP2OySaNvKl"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="bg-surface-container-high text-on-surface font-label-sm text-label-sm px-2 py-0.5 rounded-full font-semibold">Noodles</span>
+<span class="flex items-center text-xs font-bold text-on-surface">
+<span class="material-symbols-outlined text-amber-500 text-[16px] mr-0.5" style='font-variation-settings: "FILL" 1;'>star</span> 4.7
+</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface truncate">Bakmi Gondangdia 1968</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Legendaris kenyal dengan kuah kaldu murni</p>
+<div class="flex items-center gap-3 mt-1.5 font-label-sm text-label-sm text-on-surface-variant">
+<span class="text-primary font-bold">Rp 35k - 60k</span>
+<span class="">•</span>
+<span class="">📍 0.9 km</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Mini Roulette Fun Box -->
+</div>
+<script>
+  function selectBudget(btn, tier, moodText, emoji) {
+    const group = document.getElementById('budgetPresetGroup');
+    const buttons = group.querySelectorAll('.budget-card');
+    
+    buttons.forEach(b => {
+      b.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-md', 'ring-2', 'ring-primary-container');
+      b.classList.add('bg-surface-container-low', 'text-on-surface');
+      
+      const title = b.querySelector('.font-headline-sm');
+      if (title) {
+        title.classList.remove('text-on-primary');
+        title.classList.add('text-on-surface');
+      }
+      const desc = b.querySelector('.font-label-sm');
+      if (desc && !b.querySelector('.absolute')) {
+        desc.classList.remove('text-on-primary/90');
+        desc.classList.add('text-on-surface-variant');
+      }
+      const pill = b.querySelector('div > span:last-child');
+      if (pill && !b.querySelector('.absolute')) {
+        pill.className = 'text-xs font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant';
+      }
+    });
+
+    btn.classList.remove('bg-surface-container-low', 'text-on-surface');
+    btn.classList.add('bg-primary-container', 'text-on-primary', 'shadow-md', 'ring-2', 'ring-primary-container');
+    
+    const title = btn.querySelector('.font-headline-sm');
+    if (title) {
+      title.classList.remove('text-on-surface');
+      title.classList.add('text-on-primary');
+    }
+    const desc = btn.querySelector('.font-label-sm');
+    if (desc) {
+      desc.classList.remove('text-on-surface-variant');
+      desc.classList.add('text-on-primary/90');
+    }
+
+    const badge = document.getElementById('budgetMoodBadge');
+    if (badge) {
+      badge.innerHTML = `<span class="text-xs">${emoji}</span><span class="font-label-sm text-label-sm text-on-secondary-fixed">${moodText}</span>`;
+    }
+  }
+
+  function toggleFilter(pill) {
+    const parent = pill.parentElement;
+    const allPills = parent.querySelectorAll('.filter-pill');
+    
+    if (pill.innerText.includes('Bebas Apapun')) {
+      allPills.forEach(p => {
+        p.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+        p.classList.add('bg-surface-container-lowest', 'text-on-surface');
+      });
+      pill.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+      pill.classList.add('bg-inverse-surface', 'text-inverse-on-surface');
+      return;
+    }
+
+    // Toggle specific pill
+    const firstPill = allPills[0];
+    firstPill.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+    firstPill.classList.add('bg-surface-container-lowest', 'text-on-surface');
+
+    if (pill.classList.contains('bg-inverse-surface')) {
+      pill.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+      pill.classList.add('bg-surface-container-lowest', 'text-on-surface');
+    } else {
+      pill.classList.remove('bg-surface-container-lowest', 'text-on-surface');
+      pill.classList.add('bg-inverse-surface', 'text-inverse-on-surface');
+    }
+  }
+
+  function setDistance(val, label, btn) {
+    document.querySelectorAll('.dist-btn').forEach(b => {
+      b.className = 'dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-low text-on-surface-variant active:scale-95 transition-all';
+    });
+    btn.className = 'dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all';
+    document.getElementById('distanceLabel').textContent = label;
+  }
+
+  function setRating(val, label, btn) {
+    document.querySelectorAll('.rate-btn').forEach(b => {
+      b.className = 'rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-low text-on-surface-variant active:scale-95 transition-all';
+    });
+    btn.className = 'rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all';
+    document.getElementById('ratingLabel').textContent = label;
+  }
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-4px_20px_rgba(12,30,54,0.06)]" data-active-classes="text-primary font-bold"><div class="relative flex items-center justify-around h-20 px-gutter max-w-md mx-auto"><a aria-current="page" class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-space-xs transition-colors text-primary font-bold" data-path="home" href="#"><span class="material-symbols-outlined text-[24px]">home</span><span class="font-label-sm text-label-sm">Home</span></a><div class="relative -top-5 flex flex-col items-center"><a class="w-14 h-14 rounded-full bg-[#0284c7] text-white flex items-center justify-center shadow-[0_10px_25px_-4px_rgba(2,132,199,0.5)] hover:scale-105 active:scale-95 transition-transform" data-path="spin-match" href="#" onclick="openBottomSheet(); return false;"><span class="material-symbols-outlined text-[30px]">casino</span></a><span class="font-label-sm text-label-sm font-bold text-on-surface mt-1">Match</span></div><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-space-xs text-on-surface-variant transition-colors hover:text-on-surface" data-path="profile" href="#"><span class="material-symbols-outlined text-[24px]">person</span><span class="font-label-sm text-label-sm">Profile</span></a></div></nav>
+<!-- Interactive Bottom Sheet Popup Modal -->
+<div class="fixed inset-0 z-50 transition-opacity duration-300 pointer-events-none opacity-0" id="bottomSheetContainer">
+<!-- Backdrop Overlay -->
+<div class="absolute inset-0 bg-inverse-surface/60 backdrop-blur-sm transition-opacity duration-300 cursor-pointer" id="sheetBackdrop" onclick="closeBottomSheet()"></div>
+<!-- Drawer Sheet -->
+<div class="absolute bottom-0 left-0 right-0 max-w-md mx-auto bg-surface-container-lowest rounded-t-3xl shadow-2xl flex flex-col max-h-[777px] transform transition-transform duration-300 ease-out translate-y-full" id="sheetContent">
+<!-- Drag Handle Bar -->
+<div class="w-full pt-3 pb-2 flex flex-col items-center cursor-pointer shrink-0" onclick="closeBottomSheet()">
+<div class="w-12 h-1.5 rounded-full bg-surface-container-highest"></div>
+</div>
+<!-- Sheet Header -->
+<div class="px-5 pb-3 flex items-start justify-between border-b border-surface-container-low shrink-0">
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Set Kriteria Match 🎲</h3>
+<span class="text-xs bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full font-bold">Takdir Mode</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Tentukan budget &amp; selera, biar takdir yang cariin!</p>
+</div>
+<button class="w-8 h-8 rounded-full bg-surface-container-low text-on-surface flex items-center justify-center hover:bg-surface-container-high transition-colors active:scale-95" onclick="closeBottomSheet()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<!-- Sheet Scrollable Content -->
+<div class="px-5 py-4 overflow-y-auto flex flex-col gap-5 no-scrollbar pb-6">
+<!-- Step 1: Budget Selector -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold">1</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Pilih Budget Makan</h4>
+</div>
+<div class="bg-secondary-fixed px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-xs" id="modalBudgetMoodBadge"><span class="text-xs">👑</span><span class="font-label-sm text-label-sm text-on-secondary-container font-bold">Sultan Mode</span></div>
+</div>
+<!-- Budget Options Grid -->
+<div class="grid grid-cols-2 gap-2.5" id="modalBudgetGroup">
+<!-- Tier 1 -->
+<button class="modal-budget-card p-3 rounded-xl text-left transition-all duration-200 active:scale-95 flex flex-col justify-between h-24 border border-surface-container-high/40 bg-surface-container-low text-on-surface" onclick="modalSelectBudget(this, 'hemat', 'Hemat Ceria', '🪙')" type="button">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface font-bold">Hemat</span>
+<span class="text-xs font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant">$</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">15k - 30k</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Kenyang merakyat</div>
+</div>
+</button>
+<!-- Tier 2 (Active by default) -->
+<button class="modal-budget-card p-3 rounded-xl text-left transition-all duration-200 active:scale-95 flex flex-col justify-between h-24 relative overflow-hidden bg-surface-container-low text-on-surface" onclick="modalSelectBudget(this, 'pas', 'Pas Enaknya', '😋')" type="button">
+<div class="absolute -top-1 -right-1 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-2 py-0.5 rounded-bl-lg font-bold flex items-center gap-0.5 shadow-xs text-on-primary/90">
+<span class="">★</span> Favorit
+</div>
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md font-bold text-on-primary">Pas Kantong</span>
+<span class="text-xs font-bold px-1.5 py-0.5 rounded bg-on-primary-container/20 text-on-primary">$$</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">30k - 75k</div>
+<div class="font-label-sm text-label-sm text-on-primary/90">Casual &amp; mantap</div>
+</div>
+</button>
+<!-- Tier 3 -->
+<button class="modal-budget-card p-3 rounded-xl text-left transition-all duration-200 active:scale-95 flex flex-col justify-between h-24 border border-surface-container-high/40 bg-surface-container-low text-on-surface" onclick="modalSelectBudget(this, 'nraktir', 'Nraktir Teman', '🥳')" type="button">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface font-bold">Nraktir</span>
+<span class="text-xs font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant">$$$</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">75k - 150k</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">Treat yourself</div>
+</div>
+</button>
+<!-- Tier 4 -->
+<button class="modal-budget-card p-3 rounded-xl text-left transition-all duration-200 active:scale-95 flex flex-col justify-between h-24 border border-surface-container-high/40 bg-primary-container text-on-primary shadow-md ring-2 ring-primary-container" onclick="modalSelectBudget(this, 'sultan', 'Sultan Mode', '👑')" type="button">
+<div class="flex justify-between items-start">
+<span class="font-label-md text-label-md text-on-surface font-bold">Sultan Mode</span>
+<span class="text-xs font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant">$$$$</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-primary">&gt; 150k</div>
+<div class="font-label-sm text-label-sm text-on-primary/90">Gak mikir saldo</div>
+</div>
+</button>
+</div>
+</div>
+<!-- Step 2: Cravings & Filters -->
+<div class="flex flex-col gap-3 pt-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-surface-container-high text-on-surface flex items-center justify-center font-label-sm text-label-sm font-bold">2</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Lagi Pengen Apa?</h4>
+</div>
+<span class="font-label-sm text-label-sm text-primary bg-primary-fixed px-2.5 py-0.5 rounded-full font-bold">Opsional</span>
+</div>
+<!-- Cravings Pills -->
+<div class="flex gap-2 overflow-x-auto no-scrollbar py-1 -mx-5 px-5">
+<button class="modal-pill active shrink-0 px-3.5 py-2 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95 bg-surface-container-low text-on-surface" onclick="modalToggleFilter(this)" type="button">
+<span class="">🎲 Bebas Apapun</span>
+</button>
+<button class="modal-pill shrink-0 px-3.5 py-2 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95 bg-surface-container-low text-on-surface" onclick="modalToggleFilter(this)" type="button">
+<span class="">🍜 Bakso &amp; Mie</span>
+</button>
+<button class="modal-pill shrink-0 px-3.5 py-2 rounded-full font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95 bg-inverse-surface text-inverse-on-surface" onclick="modalToggleFilter(this)" type="button">
+<span class="">🍚 Nasi Padang</span>
+</button>
+<button class="modal-pill shrink-0 px-3.5 py-2 rounded-full bg-surface-container-low text-on-surface font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95" onclick="modalToggleFilter(this)" type="button">
+<span class="">🍗 Ayam Geprek</span>
+</button>
+<button class="modal-pill shrink-0 px-3.5 py-2 rounded-full bg-surface-container-low text-on-surface font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95" onclick="modalToggleFilter(this)" type="button">
+<span class="">🍢 Sate &amp; Street Food</span>
+</button>
+<button class="modal-pill shrink-0 px-3.5 py-2 rounded-full bg-surface-container-low text-on-surface font-label-md text-label-md flex items-center gap-1.5 shadow-sm transition-transform active:scale-95" onclick="modalToggleFilter(this)" type="button">
+<span class="">☕ Kopi &amp; Snack</span>
+</button>
+</div>
+<!-- Distance & Rating selectors in modal -->
+<div class="grid grid-cols-2 gap-2.5 pt-1">
+<div class="bg-surface-container-low p-3 rounded-xl flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">directions_walk</span> Jarak
+</span>
+<span class="font-bold text-on-surface" id="modalDistanceLabel">&lt; 3 km</span>
+</div>
+<div class="flex items-center gap-1 pt-0.5">
+<button class="modal-dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all" onclick="modalSetDistance('1km', '&lt; 1 km', this)" type="button">Dekat</button>
+<button class="modal-dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all" onclick="modalSetDistance('3km', '&lt; 3 km', this)" type="button">Santai</button>
+<button class="modal-dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all" onclick="modalSetDistance('8km', '&lt; 8 km', this)" type="button">Jauh</button>
+</div>
+</div>
+<div class="bg-surface-container-low p-3 rounded-xl flex flex-col gap-1.5">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-amber-500" style='font-variation-settings: "FILL" 1;'>star</span> Rating
+</span>
+<span class="font-bold text-on-surface" id="modalRatingLabel">4.0+ ⭐</span>
+</div>
+<div class="flex items-center gap-1 pt-0.5">
+<button class="modal-rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all" onclick="modalSetRating('all', 'Bebas 🎪', this)" type="button">Bebas</button>
+<button class="modal-rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all" onclick="modalSetRating('4.0', '4.0+ ⭐', this)" type="button">Enak</button>
+<button class="modal-rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all" onclick="modalSetRating('4.5', '4.5+ ✨', this)" type="button">Juara</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Modal CTA Button -->
+<div class="p-4 bg-surface-container-lowest border-t border-surface-container-low shrink-0">
+<button class="w-full py-3.5 px-4 rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all" onclick="triggerMatchAction()" type="button">
+<span class="material-symbols-outlined text-[24px]">casino</span>
+<span class="">Acak!<br/></span>
+</button>
+</div>
+</div>
+</div>
+<!-- Interactive Handlers Script -->
+<script>
+  function openBottomSheet() {
+    const container = document.getElementById('bottomSheetContainer');
+    const content = document.getElementById('sheetContent');
+    if (!container || !content) return;
+    container.classList.remove('pointer-events-none', 'opacity-0');
+    container.classList.add('pointer-events-auto', 'opacity-100');
+    setTimeout(() => {
+      content.classList.remove('translate-y-full');
+      content.classList.add('translate-y-0');
+    }, 10);
+  }
+
+  function closeBottomSheet() {
+    const container = document.getElementById('bottomSheetContainer');
+    const content = document.getElementById('sheetContent');
+    if (!container || !content) return;
+    content.classList.remove('translate-y-0');
+    content.classList.add('translate-y-full');
+    setTimeout(() => {
+      container.classList.remove('pointer-events-auto', 'opacity-100');
+      container.classList.add('pointer-events-none', 'opacity-0');
+    }, 300);
+  }
+
+  function modalSelectBudget(btn, tier, moodText, emoji) {
+    const group = document.getElementById('modalBudgetGroup');
+    if (!group) return;
+    const buttons = group.querySelectorAll('.modal-budget-card');
+    
+    buttons.forEach(b => {
+      b.classList.remove('bg-primary-container', 'text-on-primary', 'shadow-md', 'ring-2', 'ring-primary-container');
+      b.classList.add('bg-surface-container-low', 'text-on-surface');
+      
+      const title = b.querySelector('.font-headline-sm');
+      if (title) {
+        title.classList.remove('text-on-primary');
+        title.classList.add('text-on-surface');
+      }
+      const desc = b.querySelector('.font-label-sm');
+      if (desc && !b.querySelector('.absolute')) {
+        desc.classList.remove('text-on-primary/90');
+        desc.classList.add('text-on-surface-variant');
+      }
+      const pill = b.querySelector('div > span:last-child');
+      if (pill && !b.querySelector('.absolute')) {
+        pill.className = 'text-xs font-bold px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface-variant';
+      }
+    });
+
+    btn.classList.remove('bg-surface-container-low', 'text-on-surface');
+    btn.classList.add('bg-primary-container', 'text-on-primary', 'shadow-md', 'ring-2', 'ring-primary-container');
+    
+    const title = btn.querySelector('.font-headline-sm');
+    if (title) {
+      title.classList.remove('text-on-surface');
+      title.classList.add('text-on-primary');
+    }
+    const desc = btn.querySelector('.font-label-sm');
+    if (desc) {
+      desc.classList.remove('text-on-surface-variant');
+      desc.classList.add('text-on-primary/90');
+    }
+
+    const badge = document.getElementById('modalBudgetMoodBadge');
+    if (badge) {
+      badge.innerHTML = `<span class="text-xs">${emoji}</span><span class="font-label-sm text-label-sm text-on-secondary-container font-bold">${moodText}</span>`;
+    }
+  }
+
+  function modalToggleFilter(pill) {
+    const parent = pill.parentElement;
+    const allPills = parent.querySelectorAll('.modal-pill');
+    
+    if (pill.innerText.includes('Bebas Apapun')) {
+      allPills.forEach(p => {
+        p.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+        p.classList.add('bg-surface-container-low', 'text-on-surface');
+      });
+      pill.classList.remove('bg-surface-container-low', 'text-on-surface');
+      pill.classList.add('bg-inverse-surface', 'text-inverse-on-surface');
+      return;
+    }
+
+    const firstPill = allPills[0];
+    firstPill.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+    firstPill.classList.add('bg-surface-container-low', 'text-on-surface');
+
+    if (pill.classList.contains('bg-inverse-surface')) {
+      pill.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
+      pill.classList.add('bg-surface-container-low', 'text-on-surface');
+    } else {
+      pill.classList.remove('bg-surface-container-low', 'text-on-surface');
+      pill.classList.add('bg-inverse-surface', 'text-inverse-on-surface');
+    }
+  }
+
+  function modalSetDistance(val, label, btn) {
+    document.querySelectorAll('.modal-dist-btn').forEach(b => {
+      b.className = 'modal-dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all';
+    });
+    btn.className = 'modal-dist-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all';
+    document.getElementById('modalDistanceLabel').textContent = label;
+  }
+
+  function modalSetRating(val, label, btn) {
+    document.querySelectorAll('.modal-rate-btn').forEach(b => {
+      b.className = 'modal-rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant active:scale-95 transition-all';
+    });
+    btn.className = 'modal-rate-btn flex-1 py-1 rounded-lg text-center font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-bold active:scale-95 transition-all';
+    document.getElementById('modalRatingLabel').textContent = label;
+  }
+</script>
+<!-- MATCH CELEBRATION MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 transition-opacity duration-300 flex items-center justify-center p-4 pointer-events-auto opacity-100" id="matchCelebrationContainer">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/75 backdrop-blur-md transition-opacity duration-300" onclick="closeMatchCelebration()"></div>
+<!-- Confetti Particle Burst Container -->
+<div class="absolute inset-0 overflow-hidden pointer-events-none">
+<div class="confetti-piece bg-primary-container" style="left: 12%; animation-delay: 0s;"></div>
+<div class="confetti-piece bg-secondary-container" style="left: 28%; animation-delay: 0.3s;"></div>
+<div class="confetti-piece bg-tertiary-container" style="left: 45%; animation-delay: 0.1s;"></div>
+<div class="confetti-piece bg-primary" style="left: 63%; animation-delay: 0.5s;"></div>
+<div class="confetti-piece bg-secondary-fixed" style="left: 80%; animation-delay: 0.2s;"></div>
+<div class="confetti-piece bg-tertiary-fixed" style="left: 92%; animation-delay: 0.4s;"></div>
+</div>
+<!-- Winning Pop Card -->
+<div class="relative z-10 w-full max-w-sm bg-surface-container-lowest rounded-3xl p-5 shadow-2xl flex flex-col gap-4 transform transition-all duration-300 scale-100">
+<!-- Close Button -->
+<button class="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container-high active:scale-95 transition-colors" onclick="closeMatchCelebration()" type="button">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+<!-- Header & Match Badge -->
+<div class="flex flex-col items-center text-center pt-2">
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary-container/15 text-primary font-label-md text-label-md font-bold mb-2 animate-celebrate-badge">
+<span class="material-symbols-outlined text-[18px]">celebration</span>
+<span class="">100% MATCH!</span>
+</div>
+<h3 class="font-headline-md text-headline-md font-extrabold text-on-surface tracking-tight">Ketemu Jodoh Makanmu! </h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Takdir udah milih, perut udah manggil. Cus berangkat!</p>
+</div>
+<!-- Restaurant Card with Google Maps Info -->
+<div class="bg-surface-container-low rounded-2xl p-3 border border-surface-container-high/60 flex flex-col gap-2.5 shadow-sm">
+<div class="relative w-full h-36 rounded-xl overflow-hidden">
+<img alt="Sate Khas Senayan" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgyf-rG9XINqPabUQwLbc8Gdu1aTZIvlrBMFXx1k8XZOIuO4pkTI-INL0xc0FGa9gVOsA2wt82JduFtzkibOvq47DNUbCZq42cEhA_q4N3tK9cpvdEtPBUZLddYEvjyvC5QkpJ1N2C6-BirC2zGmv2aqD-zwk2NkYlsQGfKnGNKKHUt6Jvs2Honlw8v5eaGNLxuIweMh9CO23w7HyQeFC3RNDG2Y7p5aUU8DJnT2QMkkYYSPDuQEVL"/>
+<div class="absolute top-2 left-2 bg-inverse-surface/80 text-inverse-on-surface px-2 py-0.5 rounded-full font-label-sm text-label-sm backdrop-blur-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-container" style='font-variation-settings: "FILL" 1;'>verified</span> Pilihan Teratas
+</div>
+<div class="absolute bottom-2 right-2 bg-surface-container-lowest/90 px-2 py-0.5 rounded-md font-label-sm text-label-sm text-on-surface font-bold backdrop-blur-sm flex items-center gap-0.5 shadow-xs">
+<span class="material-symbols-outlined text-amber-500 text-[14px]" style='font-variation-settings: "FILL" 1;'>star</span> 4.8
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold truncate">Sate Khas Senayan</h4>
+<span class="text-xs font-bold text-primary bg-primary-container/15 px-2 py-0.5 rounded-full">Pas Kantong</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Jl. HOS Cokroaminoto No.78, Menteng</p>
+<div class="flex items-center gap-2 mt-1 text-xs text-on-surface-variant font-label-sm">
+<span class="text-secondary font-bold flex items-center gap-0.5"><span class="material-symbols-outlined text-[14px]">schedule</span> Buka sampai 22:00</span>
+<span class="">•</span>
+<span class="">📍 850m dari posisimu</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-col gap-2 pt-1">
+<button class="w-full py-3 px-4 rounded-full bg-primary text-on-primary font-headline-sm text-headline-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all" onclick="alert('Membuka rute ke Sate Khas Senayan di Google Maps!');" type="button">
+<span class="">Gas ke Sini! 🚀 (Buka Maps)</span>
+</button>
+<button class="w-full py-2.5 px-4 rounded-full bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 active:scale-95 transition-all" onclick="reSpinCelebration()" type="button">
+<span class="material-symbols-outlined text-[18px]">casino</span>
+<span class="">Cari Lain 🎲</span>
+</button>
+</div>
+</div>
+</div>
+<script>
+function openMatchCelebration() {
+  const modal = document.getElementById('matchCelebrationContainer');
+  if (!modal) return;
+  modal.classList.remove('pointer-events-none', 'opacity-0');
+  modal.classList.add('pointer-events-auto', 'opacity-100');
+  const card = modal.querySelector('.relative.z-10');
+  if (card) {
+    card.classList.remove('scale-95');
+    card.classList.add('scale-100');
+  }
+}
+function closeMatchCelebration() {
+  const modal = document.getElementById('matchCelebrationContainer');
+  if (!modal) return;
+  const card = modal.querySelector('.relative.z-10');
+  if (card) {
+    card.classList.remove('scale-100');
+    card.classList.add('scale-95');
+  }
+  modal.classList.remove('pointer-events-auto', 'opacity-100');
+  modal.classList.add('pointer-events-none', 'opacity-0');
+}
+function reSpinCelebration() {
+  closeMatchCelebration();
+  setTimeout(() => {
+    openBottomSheet();
+  }, 250);
+}
+// Enhance triggerMatchAction to reveal celebration
+function triggerMatchAction() {
+  closeBottomSheet();
+  setTimeout(() => {
+    openMatchCelebration();
+  }, 350);
+}
+</script>
+</body></html>
