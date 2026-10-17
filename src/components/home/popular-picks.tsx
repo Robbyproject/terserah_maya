@@ -20,8 +20,14 @@ export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksPr
     <View style={styles.root}>
       <View style={styles.header}>
         <View style={styles.headerCopy}>
-          <AppText variant="headlineSm">{'Favorit Korban "Terserah"'}</AppText>
-          <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
+          <AppText variant="headlineSm" numberOfLines={1} style={styles.heading}>
+            {'Favorit Korban "Terserah"'}
+          </AppText>
+          <AppText
+            variant="bodySm"
+            color={Colors.onSurfaceVariant}
+            numberOfLines={1}
+            style={styles.subhead}>
             Paling sering dapet bintang lima minggu ini
           </AppText>
         </View>
@@ -96,6 +102,14 @@ const styles = StyleSheet.create({
   headerCopy: {
     flexShrink: 1,
     gap: 2,
+  },
+  heading: {
+    fontSize: 18,
+    lineHeight: 25,
+  },
+  subhead: {
+    fontSize: 11,
+    lineHeight: 16,
   },
   seeAll: {
     flexDirection: 'row',
