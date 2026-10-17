@@ -59,7 +59,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
       <View style={styles.header}>
         <View style={styles.headerCopy}>
           <View style={styles.titleRow}>
-            <AppText variant="headlineSm" style={styles.title}>
+            <AppText variant="labelLg" style={styles.title}>
               Set Kriteria Match 🎲
             </AppText>
             <Chip label="Takdir Mode" variant="filled" size="sm" />
@@ -298,7 +298,6 @@ const styles = StyleSheet.create({
   },
   title: {
     flexShrink: 1,
-    fontFamily: FontFamily.bold,
   },
   close: {
     width: 32,

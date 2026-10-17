@@ -23,7 +23,7 @@ export function SavedCriteriaBar({ criteria, onEdit }: SavedCriteriaBarProps) {
         <View style={styles.copy}>
           <AppText variant="labelMd">Kriteria Tersimpan</AppText>
           {criteria ? (
-            <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
+            <AppText variant="bodySm" color={Colors.onSurfaceVariant} numberOfLines={1}>
               {describeCriteria(criteria)}
             </AppText>
           ) : (
