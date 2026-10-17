@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, StyleSheet, View } from 'react-native';
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
+import Animated, { Easing, FadeIn, SlideInDown } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { BlurView } from 'expo-blur';
 
@@ -17,7 +17,7 @@ export function BottomSheet({ onClose, children }: BottomSheetProps) {
   return (
     <Modal transparent animationType="none" onRequestClose={onClose} visible>
       <View style={styles.root}>
-        <Animated.View entering={FadeIn.duration(200)} style={StyleSheet.absoluteFill}>
+        <Animated.View entering={FadeIn.duration(240)} style={StyleSheet.absoluteFill}>
           <BlurView
             intensity={30}
             tint="dark"
@@ -33,7 +33,7 @@ export function BottomSheet({ onClose, children }: BottomSheetProps) {
           />
         </Animated.View>
         <Animated.View
-          entering={SlideInDown.springify().damping(18).stiffness(180)}
+          entering={SlideInDown.duration(320).easing(Easing.out(Easing.cubic))}
           style={[
             styles.sheet,
             { paddingBottom: Math.max(insets.bottom, Spacing.md) },

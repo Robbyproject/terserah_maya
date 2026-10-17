@@ -88,7 +88,9 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
                   1
                 </AppText>
               </View>
-              <AppText variant="headlineSm">Pilih Budget Makan</AppText>
+              <AppText variant="headlineSm" style={styles.stepTitleText}>
+                Pilih Budget Makan
+              </AppText>
             </View>
             <View style={styles.moodBadge}>
               <AppText variant="labelSm">{mood.emoji}</AppText>
@@ -116,7 +118,9 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
                   2
                 </AppText>
               </View>
-              <AppText variant="headlineSm">Lagi Pengen Apa?</AppText>
+              <AppText variant="headlineSm" style={styles.stepTitleText}>
+                Lagi Pengen Apa?
+              </AppText>
             </View>
             <Chip label="Opsional" variant="accent" size="sm" />
           </View>
@@ -215,20 +219,13 @@ function BudgetCard({
       accessibilityState={{ selected }}
       onPress={onSelect}
       style={[styles.budgetCard, selected && styles.budgetCardSelected]}>
-      {option.favorite ? (
-        <View style={styles.ribbon}>
-          <AppText variant="labelSm" color={Colors.onSecondaryContainer}>
-            ★ Favorit
-          </AppText>
-        </View>
-      ) : null}
       <View style={styles.budgetTop}>
         <AppText variant="labelMd" color={foreground} style={styles.bold}>
           {option.label}
         </AppText>
         <View style={[styles.symbol, selected && styles.symbolSelected]}>
           <AppText variant="labelSm" color={selected ? Colors.onPrimary : Colors.onSurfaceVariant}>
-            {option.symbol}
+            {option.favorite ? '★' : option.symbol}
           </AppText>
         </View>
       </View>
@@ -334,6 +331,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.sm,
   },
+  stepTitleText: {
+    flexShrink: 1,
+  },
   stepBadge: {
     width: 24,
     height: 24,
@@ -377,15 +377,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primaryContainer,
     borderColor: Colors.primaryContainer,
     ...Shadows.ambient,
-  },
-  ribbon: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    paddingHorizontal: Spacing.sm,
-    paddingVertical: 2,
-    borderBottomLeftRadius: Radii.sm,
-    backgroundColor: Colors.secondaryContainer,
   },
   budgetTop: {
     flexDirection: 'row',

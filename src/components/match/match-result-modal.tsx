@@ -75,7 +75,9 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
             <ConfettiPiece key={piece.left} left={piece.left} color={piece.color} delay={piece.delay} />
           ))}
         </View>
-        <Animated.View entering={ZoomIn.springify().damping(16)} style={styles.card}>
+        <Animated.View
+          entering={ZoomIn.duration(260).easing(Easing.out(Easing.cubic))}
+          style={styles.card}>
           <PressableScale
             accessibilityRole="button"
             accessibilityLabel="Tutup"
