@@ -70,7 +70,7 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
             style={StyleSheet.absoluteFill}
           />
         </Animated.View>
-        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+        <View style={[StyleSheet.absoluteFill, styles.confettiLayer]} pointerEvents="none">
           {CONFETTI.map((piece) => (
             <ConfettiPiece key={piece.left} left={piece.left} color={piece.color} delay={piece.delay} />
           ))}
@@ -215,6 +215,9 @@ const styles = StyleSheet.create({
   backdropTint: {
     ...StyleSheet.absoluteFill,
     backgroundColor: Colors.overlayInverse,
+  },
+  confettiLayer: {
+    zIndex: 2,
   },
   confetti: {
     position: 'absolute',
