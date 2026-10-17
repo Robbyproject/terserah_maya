@@ -1,98 +1,81 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+import { AppHeader } from '@/components/home/app-header';
+import { GreetingHeader } from '@/components/home/greeting-header';
+import { InstantDecisionHero } from '@/components/home/instant-decision-hero';
+import { LocationPill } from '@/components/home/location-pill';
+import { PopularPicks } from '@/components/home/popular-picks';
+import { SavedCriteriaBar } from '@/components/home/saved-criteria-bar';
+import { SponsorCarousel } from '@/components/home/sponsor-carousel';
+import { MatchFlowModals } from '@/components/match/match-flow-modals';
+import { useAsync } from '@/hooks/use-async';
+import { useMatchFlow } from '@/hooks/use-match-flow';
+import { useScreenPadding } from '@/hooks/use-screen-padding';
+import { getSavedCriteria } from '@/services/criteria.service';
+import { getNearbyPicks, getSponsors } from '@/services/discovery.service';
+import { getActiveLocation } from '@/services/location.service';
+import { getCurrentUser } from '@/services/user.service';
+import { Colors, Layout, Spacing } from '@/theme';
 
 export default function HomeScreen() {
+  const padding = useScreenPadding();
+  const { result: userResult } = useAsync(getCurrentUser);
+  const { result: locationResult } = useAsync(getActiveLocation);
+  const { result: criteriaResult } = useAsync(getSavedCriteria);
+  const { result: sponsorResult } = useAsync(getSponsors);
+  const { result: picksResult, reload: reloadPicks } = useAsync(getNearbyPicks);
+  const flow = useMatchFlow();
+
+  const user = userResult.status === 'success' ? userResult.data : null;
+  const location = locationResult.status === 'success' ? locationResult.data : null;
+  const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
+  const sponsors = sponsorResult.status === 'success' ? sponsorResult.data : null;
+
   return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+    <View style={styles.root}>
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={[styles.content, padding]}
+        showsVerticalScrollIndicator={false}>
+        <View style={styles.inner}>
+          <View style={styles.section}>
+            <GreetingHeader user={user} onOpenCriteria={flow.openSheet} />
+            <LocationPill location={location} onEdit={flow.openSheet} />
+          </View>
+          <SponsorCarousel sponsors={sponsors} />
+          <InstantDecisionHero onPress={flow.openSheet} />
+          <SavedCriteriaBar criteria={criteria} onEdit={flow.openSheet} />
+          <PopularPicks
+            result={picksResult}
+            onRetry={reloadPicks}
+            onEditCriteria={flow.openSheet}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        </View>
+      </ScrollView>
+      <AppHeader label="Home" />
+      <MatchFlowModals flow={flow} criteria={criteria} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: Colors.surface,
   },
-  safeArea: {
+  scroll: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
+  },
+  content: {
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+    paddingHorizontal: Layout.marginMobile,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  inner: {
+    width: '100%',
+    maxWidth: Layout.maxContentWidth,
+    gap: Spacing.xl,
   },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  section: {
+    gap: Spacing.md,
   },
 });
