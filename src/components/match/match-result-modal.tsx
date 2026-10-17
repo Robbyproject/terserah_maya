@@ -140,17 +140,12 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
               ) : null}
               <View style={styles.meta}>
                 {restaurant.closesAt ? (
-                  <>
-                    <View style={styles.metaItem}>
-                      <Icon name="schedule" size={14} color={Colors.secondary} />
-                      <AppText variant="labelSm" color={Colors.secondary} style={styles.bold}>
-                        Buka sampai {restaurant.closesAt}
-                      </AppText>
-                    </View>
-                    <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
-                      •
+                  <View style={styles.metaItem}>
+                    <Icon name="schedule" size={14} color={Colors.secondary} />
+                    <AppText variant="labelSm" color={Colors.secondary} style={styles.bold}>
+                      Buka sampai {restaurant.closesAt}
                     </AppText>
-                  </>
+                  </View>
                 ) : null}
                 <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
                   📍 {formatDistance(restaurant.distanceKm)} dari posisimu
@@ -160,7 +155,7 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
           </View>
           <View style={styles.actions}>
             <PillButton
-              label="Gas ke Sini! 🚀 (Buka Maps)"
+              label="Gas ke Sini! (Buka Maps)"
               size="lg"
               onPress={openMaps}
               style={styles.actionButton}
@@ -323,9 +318,9 @@ const styles = StyleSheet.create({
     fontFamily: FontFamily.bold,
   },
   meta: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: Spacing.xs,
     marginTop: Spacing.xs,
   },
   metaItem: {
