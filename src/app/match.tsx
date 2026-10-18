@@ -36,7 +36,7 @@ export default function MatchScreen() {
           <PillButton label="Atur Kriteria" icon="tune" size="lg" onPress={flow.openSheet} />
         </View>
       </ScrollView>
-      <AppHeader label="Match" />
+      <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar />
     </View>

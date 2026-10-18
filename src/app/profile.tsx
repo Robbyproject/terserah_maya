@@ -69,7 +69,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <AppHeader label="Profile" />
+      <AppHeader label="" />
       <TerserahTabBar />
     </View>
   );

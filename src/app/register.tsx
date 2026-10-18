@@ -47,7 +47,7 @@ export default function RegisterScreen() {
               <Text style={styles.label}>Nama Lengkap</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Vincze Nikolett"
+                placeholder="Doa Wahyudi"
                 placeholderTextColor="#94A3B8"
               />
             </View>

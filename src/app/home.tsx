@@ -53,7 +53,7 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
-      <AppHeader label="Home" />
+      <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar />
     </View>

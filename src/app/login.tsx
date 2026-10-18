@@ -88,7 +88,7 @@ export default function LoginScreen() {
               <Text style={styles.label}>Email / Username</Text>
               <TextInput
                 style={styles.input}
-                placeholder="nathan.roberts@example.com"
+                placeholder="doa.wahyudi@example.com"
                 placeholderTextColor="#94A3B8"
                 keyboardType="email-address"
                 autoCapitalize="none"
