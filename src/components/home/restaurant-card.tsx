@@ -14,9 +14,18 @@ export type RestaurantCardProps = {
   onPress?: () => void;
   badge?: string;
   nameLines?: number;
+  favorite?: boolean;
+  onToggleFavorite?: () => void;
 };
 
-export function RestaurantCard({ restaurant, onPress, badge, nameLines = 1 }: RestaurantCardProps) {
+export function RestaurantCard({
+  restaurant,
+  onPress,
+  badge,
+  nameLines = 1,
+  favorite = false,
+  onToggleFavorite,
+}: RestaurantCardProps) {
   const content = (
     <View style={styles.root}>
       <View style={styles.imageWrap}>
@@ -43,6 +52,26 @@ export function RestaurantCard({ restaurant, onPress, badge, nameLines = 1 }: Re
             <AppText variant="labelMd" style={styles.ratingValue}>
               {restaurant.rating}
             </AppText>
+            {onToggleFavorite ? (
+              <PressableScale
+                accessibilityRole="button"
+                accessibilityLabel={
+                  favorite
+                    ? `Hapus ${restaurant.name} dari favorit`
+                    : `Simpan ${restaurant.name} ke favorit`
+                }
+                accessibilityState={{ selected: favorite }}
+                hitSlop={8}
+                onPress={onToggleFavorite}
+                style={styles.bookmark}>
+                <Icon
+                  name="bookmark"
+                  size={16}
+                  color={favorite ? Colors.primary : Colors.onSurfaceVariant}
+                  filled={favorite}
+                />
+              </PressableScale>
+            ) : null}
           </View>
         </View>
         <AppText variant="headlineSm" numberOfLines={nameLines}>
@@ -133,6 +162,13 @@ const styles = StyleSheet.create({
   ratingValue: {
     color: Colors.onSurface,
     fontFamily: FontFamily.bold,
+  },
+  bookmark: {
+    marginLeft: Spacing.sm,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   metaRow: {
     flexDirection: 'row',

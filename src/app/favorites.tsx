@@ -13,11 +13,12 @@ import { PillButton } from '@/components/ui/pill-button';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/use-async';
+import { useFavorites } from '@/hooks/use-favorites';
 import { useMatchFlow } from '@/hooks/use-match-flow';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
 import { getSavedCriteria } from '@/services/criteria.service';
 import { getAllPicks } from '@/services/discovery.service';
-import { Colors, Layout, Radii, Shadows, Spacing } from '@/theme';
+import { Colors, Layout, Radii, Spacing } from '@/theme';
 
 const ALL_CATEGORIES = 'Semua';
 
@@ -27,6 +28,7 @@ export default function FavoritesScreen() {
   const { result: criteriaResult } = useAsync(getSavedCriteria);
   const flow = useMatchFlow();
   const [filter, setFilter] = useState(ALL_CATEGORIES);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
   const restaurants = result.status === 'success' ? result.data : [];
@@ -117,21 +119,6 @@ export default function FavoritesScreen() {
     </View>
   );
 
-  const listFooter =
-    result.status === 'success' ? (
-      <View style={styles.footerCard}>
-        <View style={styles.footerCopy}>
-          <AppText variant="headlineSm" style={styles.footerTitle}>
-            Masih bingung juga?
-          </AppText>
-          <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
-            Biar Terserah App yang tentukan.
-          </AppText>
-        </View>
-        <PillButton label="Match" icon="casino" size="md" onPress={flow.openSheet} />
-      </View>
-    ) : null;
-
   return (
     <View style={styles.root}>
       <FlatList
@@ -142,13 +129,14 @@ export default function FavoritesScreen() {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
-        ListFooterComponent={listFooter}
         renderItem={({ item }) => (
           // TODO: buka halaman detail restoran saat branch `detail-page` siap.
           <RestaurantCard
             restaurant={item}
             nameLines={2}
             badge={item.topPick ? 'Terfavorit' : undefined}
+            favorite={isFavorite(item.id)}
+            onToggleFavorite={() => toggleFavorite(item.id)}
           />
         )}
       />
@@ -237,26 +225,5 @@ const styles = StyleSheet.create({
   },
   messageText: {
     textAlign: 'center',
-  },
-  footerCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Spacing.md,
-    padding: Spacing.xl,
-    borderRadius: Radii.xl,
-    backgroundColor: Colors.surfaceContainerLowest,
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
-    ...Shadows.soft,
-  },
-  footerCopy: {
-    flex: 1,
-    flexShrink: 1,
-    gap: 2,
-  },
-  footerTitle: {
-    fontSize: 18,
-    lineHeight: 25,
   },
 });

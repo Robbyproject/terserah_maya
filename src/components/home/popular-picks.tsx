@@ -8,6 +8,7 @@ import { PillButton } from '@/components/ui/pill-button';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AsyncResult } from '@/hooks/use-async';
+import { useFavorites } from '@/hooks/use-favorites';
 import { Colors, Radii, Spacing } from '@/theme';
 import type { Restaurant } from '@/types';
 
@@ -18,6 +19,8 @@ export type PopularPicksProps = {
 };
 
 export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   return (
     <View style={styles.root}>
       <View style={styles.header}>
@@ -72,7 +75,12 @@ export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksPr
       {result.status === 'success' && result.data.length > 0 ? (
         <View style={styles.list}>
           {result.data.map((restaurant) => (
-            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            <RestaurantCard
+              key={restaurant.id}
+              restaurant={restaurant}
+              favorite={isFavorite(restaurant.id)}
+              onToggleFavorite={() => toggleFavorite(restaurant.id)}
+            />
           ))}
         </View>
       ) : null}
