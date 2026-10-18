@@ -59,6 +59,10 @@ export default function RootLayout() {
           <Stack.Screen name="register" />
           <Stack.Screen name="changepassword" />
           <Stack.Screen name="home" />
+          <Stack.Screen
+            name="favorites"
+            options={{ animation: 'slide_from_right', gestureEnabled: true }}
+          />
           <Stack.Screen name="match" />
           <Stack.Screen name="profile" />
         </Stack>

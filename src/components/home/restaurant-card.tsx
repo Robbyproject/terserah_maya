@@ -4,24 +4,37 @@ import { StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { formatDistance, formatPriceRange } from '@/lib/format';
 import { Colors, FontFamily, Radii, Shadows, Spacing } from '@/theme';
 import type { Restaurant } from '@/types';
 
 export type RestaurantCardProps = {
   restaurant: Restaurant;
+  onPress?: () => void;
+  badge?: string;
+  nameLines?: number;
 };
 
-export function RestaurantCard({ restaurant }: RestaurantCardProps) {
-  return (
+export function RestaurantCard({ restaurant, onPress, badge, nameLines = 1 }: RestaurantCardProps) {
+  const content = (
     <View style={styles.root}>
-      <Image
-        source={{ uri: restaurant.imageUrl }}
-        style={styles.image}
-        contentFit="cover"
-        transition={200}
-        accessibilityLabel={restaurant.name}
-      />
+      <View style={styles.imageWrap}>
+        <Image
+          source={{ uri: restaurant.imageUrl }}
+          style={styles.image}
+          contentFit="cover"
+          transition={200}
+          accessibilityLabel={restaurant.name}
+        />
+        {badge ? (
+          <View style={styles.badge}>
+            <AppText variant="labelSm" color={Colors.inverseOnSurface} numberOfLines={1}>
+              {badge}
+            </AppText>
+          </View>
+        ) : null}
+      </View>
       <View style={styles.body}>
         <View style={styles.topRow}>
           <Chip label={restaurant.category} variant="tintHigh" size="sm" />
@@ -32,7 +45,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
             </AppText>
           </View>
         </View>
-        <AppText variant="headlineSm" numberOfLines={1}>
+        <AppText variant="headlineSm" numberOfLines={nameLines}>
           {restaurant.name}
         </AppText>
         <AppText variant="bodySm" color={Colors.onSurfaceVariant} numberOfLines={1}>
@@ -52,9 +65,26 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
       </View>
     </View>
   );
+
+  if (!onPress) {
+    return content;
+  }
+
+  return (
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={restaurant.name}
+      onPress={onPress}
+      style={styles.pressable}>
+      {content}
+    </PressableScale>
+  );
 }
 
 const styles = StyleSheet.create({
+  pressable: {
+    width: '100%',
+  },
   root: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -64,10 +94,25 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.surfaceContainerLowest,
     ...Shadows.soft,
   },
+  imageWrap: {
+    width: 80,
+    height: 80,
+  },
   image: {
     width: 80,
     height: 80,
     borderRadius: Radii.md,
+  },
+  badge: {
+    position: 'absolute',
+    top: 6,
+    left: 6,
+    zIndex: 1,
+    maxWidth: 80,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: Radii.pill,
+    backgroundColor: Colors.inverseSurface,
   },
   body: {
     flex: 1,

@@ -8,7 +8,13 @@ export function getSponsors(): Promise<Sponsor[]> {
   return simulateNetwork(mockSponsors, 450);
 }
 
+const NEARBY_PICKS_LIMIT = 3;
+
 export function getNearbyPicks(): Promise<Restaurant[]> {
+  return simulateNetwork(mockRestaurants.slice(0, NEARBY_PICKS_LIMIT), 700);
+}
+
+export function getAllPicks(): Promise<Restaurant[]> {
   return simulateNetwork(mockRestaurants, 700);
 }
 

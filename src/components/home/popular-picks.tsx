@@ -1,9 +1,11 @@
+import { router } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
 import { RestaurantCard } from '@/components/home/restaurant-card';
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AsyncResult } from '@/hooks/use-async';
 import { Colors, Radii, Spacing } from '@/theme';
@@ -31,12 +33,16 @@ export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksPr
             Paling sering dapet bintang lima minggu ini
           </AppText>
         </View>
-        <View style={styles.seeAll}>
+        <PressableScale
+          accessibilityRole="link"
+          accessibilityLabel="Lihat semua favorit"
+          onPress={() => router.push('/favorites')}
+          style={styles.seeAll}>
           <AppText variant="labelSm" color={Colors.primary}>
             Lihat Semua
           </AppText>
           <Icon name="chevron_right" size={16} color={Colors.primary} />
-        </View>
+        </PressableScale>
       </View>
       {result.status === 'pending' ? (
         <View style={styles.list}>
