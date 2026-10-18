@@ -29,7 +29,7 @@ export function TerserahTabBar() {
         />
         <View style={styles.tint} />
         <View style={styles.row}>
-          <TabItem label="Home" icon="home" href="/" active={!isMatch && !isProfile} />
+          <TabItem label="Home" icon="home" href="/home" active={!isMatch && !isProfile} />
           <View style={styles.fabSlot} />
           <TabItem label="Profile" icon="person" href="/profile" active={isProfile} />
         </View>
