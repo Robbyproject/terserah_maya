@@ -1,5 +1,6 @@
+// src/styles/change.styles.ts
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../constants/theme';
+import { Colors } from '../constants/theme';
 
 export const styles = StyleSheet.create({
   container: {
@@ -18,6 +19,7 @@ export const styles = StyleSheet.create({
   },
   backButton: {
     paddingVertical: 4,
+    paddingRight: 12,
   },
   headerContent: {
     alignItems: 'center',
@@ -46,6 +48,7 @@ export const styles = StyleSheet.create({
     fontSize: 13,
     color: 'rgba(255, 255, 255, 0.85)',
     marginTop: 2,
+    textAlign: 'center',
   },
   formCard: {
     flex: 1,
@@ -78,43 +81,29 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: Colors.neutral,
   },
-  warningText: {
-    fontSize: 12,
-    color: '#D97706',
-    marginTop: 6,
+  passwordWrapper: {
+    position: 'relative',
+    justifyContent: 'center',
   },
-  selectWrapper: {
-    backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  passwordInput: {
+    paddingRight: 48,
   },
-  checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 16,
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
   },
-  termsText: {
+  infoText: {
     fontSize: 12,
     color: Colors.textSecondary,
-    marginLeft: 10,
-    flex: 1,
-  },
-  linkText: {
-    color: Colors.primary,
-    fontWeight: '600',
+    marginTop: 4,
+    lineHeight: 16,
   },
   primaryButton: {
     backgroundColor: Colors.primary,
     paddingVertical: 16,
     borderRadius: 30,
     alignItems: 'center',
-    marginTop: 8,
+    marginTop: 12,
     shadowColor: Colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -135,7 +124,7 @@ export const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: 14,
   },
-  signUpText: {
+  linkText: {
     color: Colors.primary,
     fontWeight: '600',
     fontSize: 14,

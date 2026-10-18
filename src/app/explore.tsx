@@ -10,6 +10,7 @@ import { Collapsible } from '@/components/ui/collapsible';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+import { AnimatedScreen } from '../components/animated-screen';
 
 export default function TabTwoScreen() {
   const safeAreaInsets = useSafeAreaInsets();
@@ -33,10 +34,11 @@ export default function TabTwoScreen() {
   });
 
   return (
-    <ScrollView
-      style={[styles.scrollView, { backgroundColor: theme.background }]}
-      contentInset={insets}
-      contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
+    <AnimatedScreen>
+      <ScrollView
+        style={[styles.scrollView, { backgroundColor: theme.background }]}
+        contentInset={insets}
+        contentContainerStyle={[styles.contentContainer, contentPlatformStyle]}>
       <ThemedView style={styles.container}>
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="subtitle">Explore</ThemedText>
@@ -121,7 +123,8 @@ export default function TabTwoScreen() {
         </ThemedView>
         {Platform.OS === 'web' && <WebBadge />}
       </ThemedView>
-    </ScrollView>
+      </ScrollView>
+    </AnimatedScreen>
   );
 }
 
