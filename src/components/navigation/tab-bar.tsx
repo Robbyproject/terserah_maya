@@ -10,13 +10,26 @@ import { Colors, Layout, Radii, Shadows, Spacing } from '@/theme';
 
 const FAB_SIZE = 56;
 
-export function TerserahTabBar() {
+export type TerserahTabBarProps = {
+  onMatchPress?: () => void;
+};
+
+export function TerserahTabBar({ onMatchPress }: TerserahTabBarProps) {
   const insets = useSafeAreaInsets();
   const pathname = usePathname();
   const bottomInset = Math.max(insets.bottom, Spacing.sm);
   const surfaceHeight = Layout.tabBarHeight + bottomInset;
+
   const isMatch = pathname.startsWith('/match');
   const isProfile = pathname.startsWith('/profile');
+
+  const handleMatchClick = () => {
+    if (onMatchPress) {
+      onMatchPress();
+    } else {
+      router.navigate('/match');
+    }
+  };
 
   return (
     <View style={[styles.container, { height: surfaceHeight + Layout.tabBarLift }]}>
@@ -39,7 +52,7 @@ export function TerserahTabBar() {
           accessibilityRole="button"
           accessibilityLabel="Match"
           accessibilityState={{ selected: isMatch }}
-          onPress={() => router.navigate('/match')}
+          onPress={handleMatchClick}
           style={[styles.fab, isMatch && styles.fabActive]}>
           <Icon name="casino" size={30} color={Colors.onPrimary} />
         </PressableScale>

@@ -55,7 +55,7 @@ export default function HomeScreen() {
       </ScrollView>
       <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
-      <TerserahTabBar />
+      <TerserahTabBar onMatchPress={flow.openSheet}/>
     </View>
   );
 }

@@ -2,6 +2,7 @@ import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -30,6 +31,12 @@ export default function RootLayout() {
     MaterialSymbols_400Regular_Filled,
   });
 
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
   if (!fontsLoaded && !fontError) {
     return null;
   }
@@ -51,8 +58,9 @@ export default function RootLayout() {
           <Stack.Screen name="login" />
           <Stack.Screen name="register" />
           <Stack.Screen name="changepassword" />
-          {/* <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="explore" /> */}
+          <Stack.Screen name="home" />
+          <Stack.Screen name="match" />
+          <Stack.Screen name="profile" />
         </Stack>
       </ThemeProvider>
     </GestureHandlerRootView>
