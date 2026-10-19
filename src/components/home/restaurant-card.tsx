@@ -19,6 +19,8 @@ export type RestaurantCardProps = {
   onToggleFavorite?: () => void;
 };
 
+// Required: id, name, category. Optional: imageUrl (neutral placeholder shown),
+// description, rating, price, distanceKm — each line hides when missing.
 export function RestaurantCard({
   restaurant,
   onPress,
@@ -27,16 +29,27 @@ export function RestaurantCard({
   favorite = false,
   onToggleFavorite,
 }: RestaurantCardProps) {
+  const hasRating = restaurant.rating != null;
+  const hasPrice = restaurant.price != null;
+  const hasDistance = restaurant.distanceKm != null;
+
   const content = (
     <View style={styles.root}>
       <View style={styles.imageWrap}>
-        <Image
-          source={{ uri: restaurant.imageUrl }}
-          style={styles.image}
-          contentFit="cover"
-          transition={200}
-          accessibilityLabel={restaurant.name}
-        />
+        {restaurant.imageUrl ? (
+          <Image
+            source={{ uri: restaurant.imageUrl }}
+            style={styles.image}
+            contentFit="cover"
+            transition={200}
+            accessibilityLabel={restaurant.name}
+          />
+        ) : (
+          // No imageUrl from the database: same footprint, neutral surface + icon.
+          <View style={styles.imagePlaceholder} accessibilityLabel={restaurant.name}>
+            <Icon name="restaurant" size={32} color={Colors.onSurfaceVariant} />
+          </View>
+        )}
         {badge ? (
           <View style={styles.badge}>
             <AppText variant="labelSm" color={Colors.inverseOnSurface} numberOfLines={1}>
@@ -49,10 +62,14 @@ export function RestaurantCard({
         <View style={styles.topRow}>
           <Chip label={restaurant.category} variant="tintHigh" size="sm" />
           <View style={styles.rating}>
-            <Icon name="star" size={16} color={Colors.amber} filled />
-            <AppText variant="labelMd" style={styles.ratingValue}>
-              {restaurant.rating}
-            </AppText>
+            {hasRating ? (
+              <>
+                <Icon name="star" size={16} color={Colors.amber} filled />
+                <AppText variant="labelMd" style={styles.ratingValue}>
+                  {restaurant.rating}
+                </AppText>
+              </>
+            ) : null}
             {onToggleFavorite ? (
               <PressableScale
                 accessibilityRole="button"
@@ -78,20 +95,30 @@ export function RestaurantCard({
         <AppText variant="headlineSm" numberOfLines={nameLines}>
           {restaurant.name}
         </AppText>
-        <AppText variant="bodySm" color={Colors.onSurfaceVariant} numberOfLines={1}>
-          {restaurant.description}
-        </AppText>
-        <View style={styles.metaRow}>
-          <AppText variant="labelSm" color={Colors.primary} style={styles.price}>
-            {formatPriceRange(restaurant.price)}
+        {restaurant.description ? (
+          <AppText variant="bodySm" color={Colors.onSurfaceVariant} numberOfLines={1}>
+            {restaurant.description}
           </AppText>
-          <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
-            •
-          </AppText>
-          <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
-            📍 {formatDistance(restaurant.distanceKm)}
-          </AppText>
-        </View>
+        ) : null}
+        {hasPrice || hasDistance ? (
+          <View style={styles.metaRow}>
+            {hasPrice ? (
+              <AppText variant="labelSm" color={Colors.primary} style={styles.price}>
+                {formatPriceRange(restaurant.price)}
+              </AppText>
+            ) : null}
+            {hasPrice && hasDistance ? (
+              <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
+                •
+              </AppText>
+            ) : null}
+            {hasDistance ? (
+              <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
+                📍 {formatDistance(restaurant.distanceKm)}
+              </AppText>
+            ) : null}
+          </View>
+        ) : null}
       </View>
     </View>
   );

@@ -19,10 +19,30 @@ export const styles = StyleSheet.create({
     gap: Spacing.md,
   },
   // ----- Header -----
-  headerBlock: {
-    gap: Spacing.lg,
+  header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
+    paddingBottom: Spacing.md,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: Colors.surfaceContainerHighSoft,
+  },
+  headerBlur: {
+    ...StyleSheet.absoluteFill,
+  },
+  headerTint: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: Colors.overlaySurface,
+  },
+  headerContent: {
+    width: '100%',
+    maxWidth: Layout.maxContentWidth + Layout.marginMobile * 2,
+    alignSelf: 'center',
+    paddingHorizontal: Layout.marginMobile,
     paddingTop: Spacing.xs,
-    paddingBottom: Spacing.xs,
+    gap: Spacing.lg,
   },
   titleBlock: {
     gap: Spacing.xs,
@@ -31,6 +51,9 @@ export const styles = StyleSheet.create({
   chips: {
     gap: Spacing.sm,
     paddingRight: Spacing.lg,
+  },
+  chip: {
+    flexShrink: 0,
   },
   // ----- Skeleton -----
   skeletonList: {

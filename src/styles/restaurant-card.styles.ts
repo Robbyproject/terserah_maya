@@ -31,6 +31,15 @@ export const styles = StyleSheet.create({
     height: 80,
     borderRadius: Radii.md,
   },
+  // Same footprint as image; neutral surface + icon when imageUrl is missing.
+  imagePlaceholder: {
+    width: 80,
+    height: 80,
+    borderRadius: Radii.md,
+    backgroundColor: Colors.surfaceContainer,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   badge: {
     position: 'absolute',
     top: 6,

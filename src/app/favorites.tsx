@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { BlurView } from 'expo-blur';
+import { useEffect, useRef, useState } from 'react';
 import { FlatList, ScrollView, View } from 'react-native';
 
 import { RestaurantCard } from '@/components/home/restaurant-card';
@@ -16,9 +17,13 @@ import { useScreenPadding } from '@/hooks/use-screen-padding';
 import { getSavedCriteria } from '@/services/criteria.service';
 import { getAllPicks } from '@/services/discovery.service';
 import { styles } from '@/styles/favorite.style';
-import { Colors, Radii } from '@/theme';
+import { Colors, Radii, Spacing } from '@/theme';
+import type { Restaurant } from '@/types';
 
 const ALL_CATEGORIES = 'Semua';
+
+// Rough header content height so the first card clears the header before onLayout measures it.
+const HEADER_CONTENT_ESTIMATE = 120;
 
 export default function FavoritesScreen() {
   const padding = useScreenPadding();
@@ -26,7 +31,14 @@ export default function FavoritesScreen() {
   const { result: criteriaResult } = useAsync(getSavedCriteria);
   const flow = useMatchFlow();
   const [filter, setFilter] = useState(ALL_CATEGORIES);
+  const [headerHeight, setHeaderHeight] = useState(() => padding.paddingTop + HEADER_CONTENT_ESTIMATE);
+  const listRef = useRef<FlatList<Restaurant>>(null);
   const { isFavorite, toggleFavorite } = useFavorites();
+
+  // Jump back to the first card whenever the category filter changes.
+  useEffect(() => {
+    listRef.current?.scrollToOffset({ offset: 0 });
+  }, [filter]);
 
   const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
   const restaurants = result.status === 'success' ? result.data : [];
@@ -38,35 +50,53 @@ export default function FavoritesScreen() {
 
   const resetFilter = () => setFilter(ALL_CATEGORIES);
 
-  const listHeader = (
-    <View style={styles.headerBlock}>
-      <View style={styles.titleBlock}>
-        <AppText variant="headlineMd">Favorit Korban Terserah</AppText>
-        <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
-          Paling sering dapat bintang lima minggu ini
-        </AppText>
-      </View>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.chips}>
-        <Chip
-          label={ALL_CATEGORIES}
-          variant={filter === ALL_CATEGORIES ? 'selected' : 'tint'}
-          onPress={() => setFilter(ALL_CATEGORIES)}
-        />
-        {categories.map((category) => (
+  // Floating glass header: cards scroll under it while the title and chips stay pinned.
+  const floatingHeader = (
+    <View
+      style={[styles.header, { paddingTop: padding.paddingTop }]}
+      onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}>
+      <BlurView
+        intensity={70}
+        tint="light"
+        blurMethod="dimezisBlurViewSdk31Plus"
+        style={styles.headerBlur}
+      />
+      <View style={styles.headerTint} />
+      <View style={styles.headerContent}>
+        <View style={styles.titleBlock}>
+          <AppText variant="headlineMd">Favorit Korban Terserah</AppText>
+          <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
+            Paling sering dapat bintang lima minggu ini
+          </AppText>
+        </View>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          alwaysBounceHorizontal
+          nestedScrollEnabled
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.chips}>
           <Chip
-            key={category}
-            label={category}
-            variant={filter === category ? 'selected' : 'tint'}
-            onPress={() => setFilter(category)}
+            label={ALL_CATEGORIES}
+            variant={filter === ALL_CATEGORIES ? 'selected' : 'tint'}
+            onPress={() => setFilter(ALL_CATEGORIES)}
+            style={styles.chip}
           />
-        ))}
-      </ScrollView>
+          {categories.map((category) => (
+            <Chip
+              key={category}
+              label={category}
+              variant={filter === category ? 'selected' : 'tint'}
+              onPress={() => setFilter(category)}
+              style={styles.chip}
+            />
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 
+  // Skeletons while loading, retry card on error, friendly note when a category is empty.
   const listEmpty = (
     <View>
       {result.status === 'pending' ? (
@@ -105,12 +135,18 @@ export default function FavoritesScreen() {
   return (
     <View style={styles.root}>
       <FlatList
+        ref={listRef}
         style={styles.list}
-        contentContainerStyle={[styles.listContent, padding]}
+        contentContainerStyle={[
+          styles.listContent,
+          padding,
+          // Runtime: measured header height (+ gap) keeps the first card from jumping under it.
+          { paddingTop: headerHeight + Spacing.md },
+        ]}
+        scrollIndicatorInsets={{ top: headerHeight }}
         showsVerticalScrollIndicator={false}
         data={visible}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={listHeader}
         ListEmptyComponent={listEmpty}
         renderItem={({ item }) => (
           // TODO: buka halaman detail restoran saat branch `detail-page` siap.
@@ -123,12 +159,14 @@ export default function FavoritesScreen() {
           />
         )}
       />
+      {floatingHeader}
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar onMatchPress={flow.openSheet} />
     </View>
   );
 }
 
+// Placeholder card shown three times while picks load.
 function PickSkeleton() {
   return (
     <View style={styles.skeletonCard}>
