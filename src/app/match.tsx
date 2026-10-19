@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { AppHeader } from '@/components/home/app-header';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { TerserahTabBar } from '@/components/navigation/tab-bar';
 import { AppText } from '@/components/ui/app-text';
@@ -36,7 +35,6 @@ export default function MatchScreen() {
           <PillButton label="Atur Kriteria" icon="tune" size="lg" onPress={flow.openSheet} />
         </View>
       </ScrollView>
-      <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar />
     </View>

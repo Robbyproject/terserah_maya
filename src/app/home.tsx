@@ -1,6 +1,5 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { AppHeader } from '@/components/home/app-header';
 import { GreetingHeader } from '@/components/home/greeting-header';
 import { InstantDecisionHero } from '@/components/home/instant-decision-hero';
 import { LocationPill } from '@/components/home/location-pill';
@@ -53,7 +52,6 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
-      <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar onMatchPress={flow.openSheet}/>
     </View>

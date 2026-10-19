@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-import { AppHeader } from '@/components/home/app-header';
 import { TerserahTabBar } from '@/components/navigation/tab-bar';
 import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
@@ -69,7 +68,6 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      <AppHeader label="" />
       <TerserahTabBar />
     </View>
   );

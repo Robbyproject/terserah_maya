@@ -1,8 +1,6 @@
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
 
-import { AppHeader } from '@/components/home/app-header';
 import { RestaurantCard } from '@/components/home/restaurant-card';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { TerserahTabBar } from '@/components/navigation/tab-bar';
@@ -10,7 +8,6 @@ import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
-import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/use-async';
 import { useFavorites } from '@/hooks/use-favorites';
@@ -38,25 +35,10 @@ export default function FavoritesScreen() {
       ? restaurants
       : restaurants.filter((restaurant) => restaurant.category === filter);
 
-  const handleBack = () => {
-    if (router.canGoBack()) {
-      router.back();
-    } else {
-      router.replace('/home');
-    }
-  };
-
   const resetFilter = () => setFilter(ALL_CATEGORIES);
 
   const listHeader = (
     <View style={styles.headerBlock}>
-      <PressableScale
-        accessibilityRole="button"
-        accessibilityLabel="Kembali"
-        onPress={handleBack}
-        style={styles.backButton}>
-        <Icon name="arrow_back" size={22} color={Colors.onSurface} />
-      </PressableScale>
       <View style={styles.titleBlock}>
         <AppText variant="headlineMd">Favorit Korban Terserah</AppText>
         <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
@@ -140,7 +122,6 @@ export default function FavoritesScreen() {
           />
         )}
       />
-      <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
       <TerserahTabBar onMatchPress={flow.openSheet} />
     </View>
@@ -180,16 +161,6 @@ const styles = StyleSheet.create({
     gap: Spacing.lg,
     paddingTop: Spacing.xs,
     paddingBottom: Spacing.xs,
-  },
-  backButton: {
-    width: Layout.hitTarget,
-    height: Layout.hitTarget,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceContainerLow,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
   },
   titleBlock: {
     gap: Spacing.xs,
