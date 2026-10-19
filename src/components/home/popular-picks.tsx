@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { RestaurantCard } from '@/components/home/restaurant-card';
 import { AppText } from '@/components/ui/app-text';
@@ -9,7 +9,8 @@ import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AsyncResult } from '@/hooks/use-async';
 import { useFavorites } from '@/hooks/use-favorites';
-import { Colors, Radii, Spacing } from '@/theme';
+import { styles } from '@/styles/popular-picks.styles';
+import { Colors, Radii } from '@/theme';
 import type { Restaurant } from '@/types';
 
 export type PopularPicksProps = {
@@ -101,61 +102,3 @@ function PickSkeleton() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    gap: Spacing.md,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
-  },
-  headerCopy: {
-    flexShrink: 1,
-    gap: 2,
-  },
-  heading: {
-    fontSize: 18,
-    lineHeight: 25,
-  },
-  subhead: {
-    fontSize: 11,
-    lineHeight: 16,
-  },
-  seeAll: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingTop: 6,
-  },
-  list: {
-    gap: Spacing.md,
-  },
-  message: {
-    alignItems: 'center',
-    gap: Spacing.sm,
-    padding: Spacing.xl,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLow,
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
-  },
-  messageText: {
-    textAlign: 'center',
-  },
-  skeletonCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    padding: 14,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLowest,
-  },
-  skeletonBody: {
-    flex: 1,
-    gap: Spacing.sm,
-  },
-});

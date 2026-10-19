@@ -1,12 +1,13 @@
 import { Image } from 'expo-image';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { formatDistance, formatPriceRange } from '@/lib/format';
-import { Colors, FontFamily, Radii, Shadows, Spacing } from '@/theme';
+import { styles } from '@/styles/restaurant-card.styles';
+import { Colors } from '@/theme';
 import type { Restaurant } from '@/types';
 
 export type RestaurantCardProps = {
@@ -109,74 +110,3 @@ export function RestaurantCard({
     </PressableScale>
   );
 }
-
-const styles = StyleSheet.create({
-  pressable: {
-    width: '100%',
-  },
-  root: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    padding: 14,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLowest,
-    ...Shadows.soft,
-  },
-  imageWrap: {
-    width: 80,
-    height: 80,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: Radii.md,
-  },
-  badge: {
-    position: 'absolute',
-    top: 6,
-    left: 6,
-    zIndex: 1,
-    maxWidth: 80,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.inverseSurface,
-  },
-  body: {
-    flex: 1,
-    flexShrink: 1,
-    gap: 2,
-  },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-  },
-  rating: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-  },
-  ratingValue: {
-    color: Colors.onSurface,
-    fontFamily: FontFamily.bold,
-  },
-  bookmark: {
-    marginLeft: Spacing.sm,
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.md,
-    marginTop: 6,
-  },
-  price: {
-    fontFamily: FontFamily.bold,
-  },
-});

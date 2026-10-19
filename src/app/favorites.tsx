@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FlatList, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, ScrollView, View } from 'react-native';
 
 import { RestaurantCard } from '@/components/home/restaurant-card';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
@@ -15,7 +15,8 @@ import { useMatchFlow } from '@/hooks/use-match-flow';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
 import { getSavedCriteria } from '@/services/criteria.service';
 import { getAllPicks } from '@/services/discovery.service';
-import { Colors, Layout, Radii, Spacing } from '@/theme';
+import { styles } from '@/styles/favorite.style';
+import { Colors, Radii } from '@/theme';
 
 const ALL_CATEGORIES = 'Semua';
 
@@ -141,60 +142,3 @@ function PickSkeleton() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    backgroundColor: Colors.surface,
-  },
-  list: {
-    flex: 1,
-  },
-  listContent: {
-    width: '100%',
-    maxWidth: Layout.maxContentWidth + Layout.marginMobile * 2,
-    alignSelf: 'center',
-    paddingHorizontal: Layout.marginMobile,
-    gap: Spacing.md,
-  },
-  headerBlock: {
-    gap: Spacing.lg,
-    paddingTop: Spacing.xs,
-    paddingBottom: Spacing.xs,
-  },
-  titleBlock: {
-    gap: Spacing.xs,
-    paddingHorizontal: Spacing.xs,
-  },
-  chips: {
-    gap: Spacing.sm,
-    paddingRight: Spacing.lg,
-  },
-  skeletonList: {
-    gap: Spacing.md,
-  },
-  skeletonCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    padding: 14,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLowest,
-  },
-  skeletonBody: {
-    flex: 1,
-    gap: Spacing.sm,
-  },
-  message: {
-    alignItems: 'center',
-    gap: Spacing.sm,
-    padding: Spacing.xl,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLow,
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
-  },
-  messageText: {
-    textAlign: 'center',
-  },
-});
