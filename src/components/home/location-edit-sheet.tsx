@@ -1,11 +1,11 @@
 
 import { useState } from 'react';
 import {
-    Alert,
-    Keyboard,
-    StyleSheet,
-    TextInput,
-    View,
+  Alert,
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
@@ -29,16 +29,12 @@ export function LocationEditSheet({
   onClose,
   onSave,
 }: LocationEditSheetProps) {
-  const [label, setLabel] = useState(
-    location?.label ?? '',
-  );
+  const [label, setLabel] = useState(location?.label ?? '');
   const [radiusKm, setRadiusKm] = useState(
     location?.radiusKm ?? 3,
   );
 
   function saveLocation() {
-    Keyboard.dismiss();
-
     const trimmedLabel = label.trim();
 
     if (!trimmedLabel) {
@@ -48,6 +44,8 @@ export function LocationEditSheet({
       );
       return;
     }
+
+    Keyboard.dismiss();
 
     onSave({
       id: location?.id ?? 'loc_custom',
@@ -94,6 +92,7 @@ export function LocationEditSheet({
           placeholder="Contoh: Menteng, Jakarta Pusat"
           placeholderTextColor={Colors.onSurfaceVariant}
           returnKeyType="done"
+          onSubmitEditing={Keyboard.dismiss}
           style={styles.input}
           accessibilityLabel="Nama lokasi pencarian"
         />
@@ -156,6 +155,7 @@ export function LocationEditSheet({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: Spacing.xl,
+    paddingTop: Spacing.xl,
     paddingBottom: Spacing.xl,
     gap: Spacing.md,
   },

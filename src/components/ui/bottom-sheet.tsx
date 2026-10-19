@@ -6,15 +6,9 @@ import {
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
-import Animated, {
-  Easing,
-  FadeIn,
-  SlideInDown,
-} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Colors, Layout, Radii, Spacing } from '@/theme';
@@ -37,37 +31,39 @@ export function BottomSheet({
       onRequestClose={onClose}
       visible
       statusBarTranslucent
-      navigationBarTranslucent>
+      navigationBarTranslucent
+    >
       <KeyboardAvoidingView
         style={styles.root}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Animated.View
-          entering={FadeIn.duration(240)}
-          style={StyleSheet.absoluteFill}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        enabled
+      >
+        {/* Background overlay */}
+        <View style={StyleSheet.absoluteFill}>
           <BlurView
             intensity={30}
             tint="dark"
             blurMethod="dimezisBlurViewSdk31Plus"
             style={StyleSheet.absoluteFill}
           />
+
           <View
             style={[
               StyleSheet.absoluteFill,
               styles.backdropTint,
             ]}
           />
+
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Tutup kriteria"
             onPress={onClose}
             style={StyleSheet.absoluteFill}
           />
-        </Animated.View>
+        </View>
 
-        <Animated.View
-          entering={SlideInDown.duration(320).easing(
-            Easing.out(Easing.cubic),
-          )}
+        {/* Bottom sheet */}
+        <View
           style={[
             styles.sheet,
             {
@@ -77,14 +73,10 @@ export function BottomSheet({
               ),
               maxHeight: '88%',
             },
-          ]}>
-          <ScrollView
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}>
-            {children}
-          </ScrollView>
-        </Animated.View>
+          ]}
+        >
+          {children}
+        </View>
       </KeyboardAvoidingView>
     </Modal>
   );
@@ -95,9 +87,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
   },
+
   backdropTint: {
     backgroundColor: Colors.overlayInverse,
   },
+
   sheet: {
     width: '100%',
     maxWidth: Layout.maxContentWidth,
@@ -106,8 +100,5 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: Radii.xl,
     borderTopRightRadius: Radii.xl,
     overflow: 'hidden',
-  },
-  scrollContent: {
-    flexGrow: 1,
   },
 });
