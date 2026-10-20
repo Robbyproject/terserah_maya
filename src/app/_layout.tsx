@@ -52,7 +52,7 @@ export default function RootLayout() {
     return null;
   }
 
-  // Tampilkan TabBar hanya untuk rute utama
+  // Tampilkan TabBar hanya untuk rute utama (halaman change-password tidak menampilkan bottom bar)
   const tabRoutes = ['/home', '/match', '/profile'];
   const showTabBar = tabRoutes.some((route) => pathname.startsWith(route));
 
@@ -67,7 +67,7 @@ export default function RootLayout() {
             screenOptions={{
               headerShown: false,
               animation: 'slide_from_right',
-              animationDuration: 280, // Durasi 280ms memberikan transisi yang lebih responsif dan lincah
+              animationDuration: 280,
               gestureEnabled: true,
             }}
           >
@@ -75,6 +75,14 @@ export default function RootLayout() {
             <Stack.Screen name="login" />
             <Stack.Screen name="register" />
             <Stack.Screen name="changepassword" />
+
+            {/* Halaman ganti password dari Profile (meluncur masuk dari kanan) */}
+            <Stack.Screen
+              name="change-password"
+              options={{
+                animation: 'slide_from_right',
+              }}
+            />
 
             {/* Saat ke Home, layar masuk dari KIRI (konsisten karena Home berada di tab kiri) */}
             <Stack.Screen
