@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { GestureDetector } from 'react-native-gesture-handler';
 
 import { AppText } from '@/components/ui/app-text';
-import { BottomSheet } from '@/components/ui/bottom-sheet';
+import { BottomSheet, useBottomSheet } from '@/components/ui/bottom-sheet';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
@@ -14,7 +15,8 @@ import {
   DISTANCE_OPTIONS,
   RATING_OPTIONS,
 } from '@/constants/match';
-import { Colors, FontFamily, Radii, Shadows, Spacing } from '@/theme';
+import { styles } from '@/styles/criteria.styles';
+import { Colors } from '@/theme';
 import type { BudgetOption, BudgetTier, Distance, MatchCriteria, MinRating } from '@/types';
 
 export type CriteriaSheetProps = {
@@ -24,7 +26,21 @@ export type CriteriaSheetProps = {
   spinning?: boolean;
 };
 
-export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: CriteriaSheetProps) {
+export function CriteriaSheet({ onClose, ...restProps }: CriteriaSheetProps) {
+  return (
+    <BottomSheet onClose={onClose}>
+      <CriteriaSheetContent onClose={onClose} {...restProps} />
+    </BottomSheet>
+  );
+}
+
+function CriteriaSheetContent({
+  criteria,
+  onClose,
+  onSpin,
+  spinning = false,
+}: CriteriaSheetProps) {
+  const { close, panGesture } = useBottomSheet();
   const [budgetTier, setBudgetTier] = useState<BudgetTier>(criteria?.budgetTier ?? 'pas');
   const [cravings, setCravings] = useState<string[]>(criteria?.cravings ?? [DEFAULT_CRAVING]);
   const [distance, setDistance] = useState<Distance>(criteria?.distance ?? '3km');
@@ -47,35 +63,47 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
     setCravings(selected.length > 0 ? selected : [DEFAULT_CRAVING]);
   };
 
-  return (
-    <BottomSheet onClose={onClose}>
+  const handlePressClose = () => {
+    if (close) {
+      close();
+    } else {
+      onClose();
+    }
+  };
+
+  const headerContent = (
+    <View style={styles.header}>
+      <View style={styles.headerCopy}>
+        <View style={styles.titleRow}>
+          <AppText variant="labelLg" style={styles.title}>
+            Set Kriteria Match 🎲
+          </AppText>
+          <Chip label="Takdir Mode" variant="filled" size="sm" />
+        </View>
+        <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
+          Tentukan budget &amp; selera, biar takdir yang cariin!
+        </AppText>
+      </View>
       <PressableScale
         accessibilityRole="button"
-        accessibilityLabel="Tutup kriteria"
-        onPress={onClose}
-        style={styles.handleArea}>
-        <View style={styles.handle} />
+        accessibilityLabel="Tutup"
+        onPress={handlePressClose}
+        style={styles.close}>
+        <Icon name="close" size={18} color={Colors.onSurface} />
       </PressableScale>
-      <View style={styles.header}>
-        <View style={styles.headerCopy}>
-          <View style={styles.titleRow}>
-            <AppText variant="labelLg" style={styles.title}>
-              Set Kriteria Match 🎲
-            </AppText>
-            <Chip label="Takdir Mode" variant="filled" size="sm" />
-          </View>
-          <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
-            Tentukan budget &amp; selera, biar takdir yang cariin!
-          </AppText>
-        </View>
-        <PressableScale
-          accessibilityRole="button"
-          accessibilityLabel="Tutup"
-          onPress={onClose}
-          style={styles.close}>
-          <Icon name="close" size={18} color={Colors.onSurface} />
-        </PressableScale>
-      </View>
+    </View>
+  );
+
+  return (
+    <>
+      {panGesture ? (
+        <GestureDetector gesture={panGesture}>
+          {headerContent}
+        </GestureDetector>
+      ) : (
+        headerContent
+      )}
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
@@ -110,6 +138,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
             ))}
           </View>
         </View>
+
         <View style={styles.step}>
           <View style={styles.stepHeader}>
             <View style={styles.stepTitle}>
@@ -137,6 +166,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
               />
             ))}
           </ScrollView>
+
           <View style={styles.selectors}>
             <View style={styles.selectorCard}>
               <View style={styles.selectorHeader}>
@@ -161,6 +191,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
                 ))}
               </View>
             </View>
+
             <View style={styles.selectorCard}>
               <View style={styles.selectorHeader}>
                 <View style={styles.selectorLabel}>
@@ -187,6 +218,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
           </View>
         </View>
       </ScrollView>
+
       <View style={styles.footer}>
         <PillButton
           label="Acak!"
@@ -197,7 +229,7 @@ export function CriteriaSheet({ criteria, onClose, onSpin, spinning = false }: C
           style={styles.cta}
         />
       </View>
-    </BottomSheet>
+    </>
   );
 }
 
@@ -264,184 +296,3 @@ function SegmentedButton({
     </PressableScale>
   );
 }
-
-const styles = StyleSheet.create({
-  handleArea: {
-    alignItems: 'center',
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.sm,
-  },
-  handle: {
-    width: 48,
-    height: 6,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceContainerHighest,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: Spacing.md,
-    paddingHorizontal: Spacing.xl,
-    paddingBottom: Spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.surfaceContainerLow,
-  },
-  headerCopy: {
-    flexShrink: 1,
-    gap: 2,
-  },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-  },
-  title: {
-    flexShrink: 1,
-  },
-  close: {
-    width: 32,
-    height: 32,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.surfaceContainerLow,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  scroll: {
-    flexShrink: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: Spacing.xl,
-    paddingVertical: Spacing.lg,
-    gap: Spacing.xl,
-  },
-  step: {
-    gap: Spacing.md,
-  },
-  stepHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-  },
-  stepTitle: {
-    flexShrink: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.sm,
-  },
-  stepTitleText: {
-    flexShrink: 1,
-  },
-  stepBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.primaryContainer,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  stepBadgeMuted: {
-    backgroundColor: Colors.surfaceContainerHigh,
-  },
-  moodBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-    paddingHorizontal: 10,
-    paddingVertical: 2,
-    borderRadius: Radii.pill,
-    backgroundColor: Colors.secondaryFixed,
-    ...Shadows.soft,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  budgetCard: {
-    flexBasis: '45%',
-    flexGrow: 1,
-    height: 96,
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-    padding: Spacing.md,
-    borderRadius: Radii.xl,
-    backgroundColor: Colors.surfaceContainerLow,
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
-    overflow: 'hidden',
-  },
-  budgetCardSelected: {
-    backgroundColor: Colors.primaryContainer,
-    borderColor: Colors.primaryContainer,
-    ...Shadows.ambient,
-  },
-  budgetTop: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-  },
-  symbol: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: Radii.xs,
-    backgroundColor: Colors.surfaceContainerHighest,
-  },
-  symbolSelected: {
-    backgroundColor: Colors.secondaryContainer,
-  },
-  bold: {
-    fontFamily: FontFamily.bold,
-  },
-  cravings: {
-    gap: Spacing.sm,
-    paddingVertical: Spacing.xs,
-  },
-  selectors: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  selectorCard: {
-    flex: 1,
-    gap: 6,
-    padding: Spacing.md,
-    borderRadius: Radii.xl,
-    backgroundColor: Colors.surfaceContainerLow,
-  },
-  selectorHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-  },
-  selectorLabel: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  segmented: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.xs,
-  },
-  segment: {
-    flex: 1,
-    alignItems: 'center',
-    paddingVertical: Spacing.xs,
-    borderRadius: Radii.sm,
-    backgroundColor: Colors.surfaceContainerLowest,
-  },
-  segmentActive: {
-    backgroundColor: Colors.secondaryContainer,
-  },
-  footer: {
-    padding: Spacing.lg,
-    borderTopWidth: 1,
-    borderTopColor: Colors.surfaceContainerLow,
-  },
-  cta: {
-    width: '100%',
-  },
-});

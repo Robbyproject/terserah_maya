@@ -46,7 +46,8 @@ export function AnimatedScreen({ children }: AnimatedScreenProps) {
             dragX.value = withSpring(0, { damping: 18, stiffness: 180 });
           }
         }),
-    [canGoBack, dragX, goBack]
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- dragX adalah shared value Reanimated: nilainya stabil selama komponen hidup, tidak wajib jadi dependency
+    [canGoBack, goBack]
   );
 
   const dragStyle = useAnimatedStyle(() => ({

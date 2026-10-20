@@ -84,7 +84,12 @@ function TabItem({
       accessibilityRole="tab"
       accessibilityLabel={label}
       accessibilityState={{ selected: active }}
-      onPress={() => router.navigate(href)}
+      onPress={() => {
+        // Cegah re-navigasi jika tab sudah aktif
+        if (!active) {
+          router.navigate(href);
+        }
+      }}
       style={styles.tabItem}>
       <Icon name={icon} size={24} color={active ? Colors.primary : Colors.onSurfaceVariant} />
       <AppText variant="labelSm" color={active ? Colors.primary : Colors.onSurfaceVariant}>

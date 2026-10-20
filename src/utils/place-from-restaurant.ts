@@ -21,7 +21,7 @@ const DAY_LABELS = [
 ] as const;
 
 /** Batas harga (Rupiah) untuk tiap level $ s/d $$$$. */
-const PRICE_LEVEL_MAX: ReadonlyArray<readonly [number, 1 | 2 | 3 | 4]> = [
+const PRICE_LEVEL_MAX: readonly (readonly [number, 1 | 2 | 3 | 4])[] = [
   [30_000, 1],
   [60_000, 2],
   [100_000, 3],

@@ -67,7 +67,7 @@ export default function RootLayout() {
             screenOptions={{
               headerShown: false,
               animation: 'slide_from_right',
-              animationDuration: 320,
+              animationDuration: 280, // Durasi 280ms memberikan transisi yang lebih responsif dan lincah
               gestureEnabled: true,
             }}
           >
@@ -75,9 +75,24 @@ export default function RootLayout() {
             <Stack.Screen name="login" />
             <Stack.Screen name="register" />
             <Stack.Screen name="changepassword" />
-            <Stack.Screen name="home" />
+
+            {/* Saat ke Home, layar masuk dari KIRI (konsisten karena Home berada di tab kiri) */}
+            <Stack.Screen
+              name="home"
+              options={{
+                animation: 'slide_from_left',
+              }}
+            />
+
             <Stack.Screen name="match" />
-            <Stack.Screen name="profile" />
+
+            {/* Saat ke Profile, layar masuk dari KANAN (konsisten karena Profile berada di tab kanan) */}
+            <Stack.Screen
+              name="profile"
+              options={{
+                animation: 'slide_from_right',
+              }}
+            />
           </Stack>
 
           {/* Pasang onMatchPress={flow.openSheet} ke TabBar */}

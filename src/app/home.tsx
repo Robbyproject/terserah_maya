@@ -1,26 +1,27 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/components/home/app-header';
 import { GreetingHeader } from '@/components/home/greeting-header';
 import { InstantDecisionHero } from '@/components/home/instant-decision-hero';
+import { LocationEditSheet } from '@/components/home/location-edit-sheet';
 import { LocationPill } from '@/components/home/location-pill';
 import { PopularPicks } from '@/components/home/popular-picks';
 import { SavedCriteriaBar } from '@/components/home/saved-criteria-bar';
 import { SponsorCarousel } from '@/components/home/sponsor-carousel';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { PlaceDetailSheet, type PlaceDetailSheetHandle } from '@/components/place/place-detail-sheet';
-// import { TerserahTabBar } from '@/components/navigation/tab-bar';
 import { useAsync } from '@/hooks/use-async';
 import { useMatchFlow } from '@/hooks/use-match-flow';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
 import { getSavedCriteria } from '@/services/criteria.service';
 import { getNearbyPicks, getSponsors } from '@/services/discovery.service';
-import { getActiveLocation } from '@/services/location.service';
+import { getActiveLocation, saveActiveLocation } from '@/services/location.service';
 import { getCurrentUser } from '@/services/user.service';
 import { Colors, Layout, Spacing } from '@/theme';
-import type { Restaurant } from '@/types';
+import type { Restaurant, UserLocation } from '@/types';
 import { restaurantToPlace } from '@/utils/place-from-restaurant';
 
 function openExternal(url: string) {
@@ -30,33 +31,39 @@ function openExternal(url: string) {
 }
 
 export default function HomeScreen() {
+  const insets = useSafeAreaInsets();
   const params = useLocalSearchParams<{ openMatch?: string }>();
   const padding = useScreenPadding();
+
   const { result: userResult } = useAsync(getCurrentUser);
-  const { result: locationResult } = useAsync(getActiveLocation);
+  const { result: locationResult, reload: reloadLocation } = useAsync(getActiveLocation);
   const { result: criteriaResult } = useAsync(getSavedCriteria);
   const { result: sponsorResult } = useAsync(getSponsors);
   const { result: picksResult, reload: reloadPicks } = useAsync(getNearbyPicks);
   const flow = useMatchFlow();
+  const { openSheet } = flow;
 
   const detailSheetRef = useRef<PlaceDetailSheetHandle>(null);
   const [detailRestaurant, setDetailRestaurant] = useState<Restaurant | null>(null);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
+  const [isLocationSheetVisible, setLocationSheetVisible] = useState(false);
 
-  // Menangkap sinyal openMatch saat user menekan ikon Match dari halaman lain (misal Profile)
+  // Efek penanganan tombol Match dengan jeda animasi yang mulus
   useEffect(() => {
     if (params.openMatch) {
-      flow.openSheet();
+      const timer = setTimeout(() => {
+        openSheet();
+      }, 120);
+
+      return () => clearTimeout(timer);
     }
-  }, [params.openMatch]);
+  }, [openSheet, params.openMatch]);
 
   const user = userResult.status === 'success' ? userResult.data : null;
   const location = locationResult.status === 'success' ? locationResult.data : null;
   const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
   const sponsors = sponsorResult.status === 'success' ? sponsorResult.data : null;
 
-  // Sheet selalu ter-mount (index -1), jadi state isi & perintah buka boleh berurutan
-  // di tick yang sama: React flush render sebelum animasi sheet selesai.
   const openDetail = useCallback((restaurant: Restaurant) => {
     setDetailRestaurant(restaurant);
     detailSheetRef.current?.open();
@@ -97,17 +104,44 @@ export default function HomeScreen() {
     openExternal(url);
   }, []);
 
+  const handleSaveLocation = useCallback(
+    async (newLocation: UserLocation) => {
+      try {
+        if (typeof saveActiveLocation === 'function') {
+          await saveActiveLocation(newLocation);
+        }
+        setLocationSheetVisible(false);
+        reloadLocation();
+        reloadPicks();
+      } catch {
+        Alert.alert('Gagal Menyimpan', 'Tidak bisa memperbarui lokasi.');
+      }
+    },
+    [reloadLocation, reloadPicks]
+  );
+
   return (
     <View style={styles.root}>
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[styles.content, padding]}
+        contentContainerStyle={[
+          styles.content,
+          padding,
+          { paddingTop: insets.top + Spacing.xs },
+        ]}
         showsVerticalScrollIndicator={false}>
         <View style={styles.inner}>
+          <AppHeader label="" />
+
           <View style={styles.section}>
             <GreetingHeader user={user} onOpenCriteria={flow.openSheet} />
-            <LocationPill location={location} onEdit={flow.openSheet} />
+            {/* PERBAIKAN: setLocationSheetVisible(true) */}
+            <LocationPill
+              location={location}
+              onEdit={() => setLocationSheetVisible(true)}
+            />
           </View>
+
           <SponsorCarousel sponsors={sponsors} />
           <InstantDecisionHero onPress={flow.openSheet} />
           <SavedCriteriaBar criteria={criteria} onEdit={flow.openSheet} />
@@ -119,9 +153,16 @@ export default function HomeScreen() {
           />
         </View>
       </ScrollView>
-      <AppHeader label="" />
+
+      {isLocationSheetVisible && (
+        <LocationEditSheet
+          location={location}
+          onClose={() => setLocationSheetVisible(false)}
+          onSave={handleSaveLocation}
+        />
+      )}
+
       <MatchFlowModals flow={flow} criteria={criteria} />
-      {/* <TerserahTabBar onMatchPress={flow.openSheet} /> */}
       <PlaceDetailSheet
         ref={detailSheetRef}
         place={detailRestaurant ? restaurantToPlace(detailRestaurant) : null}
