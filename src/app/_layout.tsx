@@ -1,9 +1,9 @@
 import { useFonts } from 'expo-font';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { useColorScheme } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { MaterialSymbols_400Regular } from '@expo-google-fonts/material-symbols/400Regular';
@@ -15,11 +15,22 @@ import { PlusJakartaSans_700Bold } from '@expo-google-fonts/plus-jakarta-sans/70
 import { PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sans/800ExtraBold';
 
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
+import { MatchFlowModals } from '@/components/match/match-flow-modals';
+import { TerserahTabBar } from '@/components/navigation/tab-bar';
+import { useAsync } from '@/hooks/use-async';
+import { useMatchFlow } from '@/hooks/use-match-flow';
+import { getSavedCriteria } from '@/services/criteria.service';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const pathname = usePathname();
+
+  // Inisialisasi Hook Match Flow & Criteria secara Global
+  const flow = useMatchFlow();
+  const { result: criteriaResult } = useAsync(getSavedCriteria);
+  const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
 
   const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,
@@ -41,27 +52,40 @@ export default function RootLayout() {
     return null;
   }
 
+  // Tampilkan TabBar hanya untuk rute utama
+  const tabRoutes = ['/home', '/match', '/profile'];
+  const showTabBar = tabRoutes.some((route) => pathname.startsWith(route));
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <AnimatedSplashOverlay />
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            animation: 'slide_from_bottom',
-            animationDuration: 320,
-            gestureEnabled: false,
-          }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="register" />
-          <Stack.Screen name="changepassword" />
-          <Stack.Screen name="home" />
-          <Stack.Screen name="match" />
-          <Stack.Screen name="profile" />
-        </Stack>
+
+        <View style={{ flex: 1 }}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: 'slide_from_right',
+              animationDuration: 320,
+              gestureEnabled: true,
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="changepassword" />
+            <Stack.Screen name="home" />
+            <Stack.Screen name="match" />
+            <Stack.Screen name="profile" />
+          </Stack>
+
+          {/* Pasang onMatchPress={flow.openSheet} ke TabBar */}
+          {showTabBar && <TerserahTabBar onMatchPress={flow.openSheet} />}
+
+          {/* Render Modal Match Flow secara Global */}
+          <MatchFlowModals flow={flow} criteria={criteria} />
+        </View>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

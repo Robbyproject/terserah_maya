@@ -2,7 +2,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { AppHeader } from '@/components/home/app-header';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
-import { TerserahTabBar } from '@/components/navigation/tab-bar';
+// import { TerserahTabBar } from '@/components/navigation/tab-bar';
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
@@ -38,7 +38,7 @@ export default function MatchScreen() {
       </ScrollView>
       <AppHeader label="" />
       <MatchFlowModals flow={flow} criteria={criteria} />
-      <TerserahTabBar />
+      {/* <TerserahTabBar /> */}
     </View>
   );
 }

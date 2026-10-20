@@ -2,7 +2,7 @@ import { useRouter } from 'expo-router';
 import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import { AppHeader } from '@/components/home/app-header';
-import { TerserahTabBar } from '@/components/navigation/tab-bar';
+// import { TerserahTabBar } from '@/components/navigation/tab-bar';
 import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
@@ -70,7 +70,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
       <AppHeader label="" />
-      <TerserahTabBar />
+      {/* <TerserahTabBar /> */}
     </View>
   );
 }

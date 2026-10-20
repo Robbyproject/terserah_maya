@@ -4,17 +4,25 @@ import { StyleSheet, View } from 'react-native';
 import { AppText } from '@/components/ui/app-text';
 import { Chip } from '@/components/ui/chip';
 import { Icon } from '@/components/ui/icon';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { formatDistance, formatPriceRange } from '@/lib/format';
 import { Colors, FontFamily, Radii, Shadows, Spacing } from '@/theme';
 import type { Restaurant } from '@/types';
 
 export type RestaurantCardProps = {
   restaurant: Restaurant;
+  /** Buka detail restoran (bottom sheet). Kalau tidak diisi, kartu tidak bisa ditekan. */
+  onPress?: () => void;
 };
 
-export function RestaurantCard({ restaurant }: RestaurantCardProps) {
+export function RestaurantCard({ restaurant, onPress }: RestaurantCardProps) {
   return (
-    <View style={styles.root}>
+    <PressableScale
+      accessibilityRole="button"
+      accessibilityLabel={`Buka detail ${restaurant.name}`}
+      disabled={!onPress}
+      onPress={onPress}
+      style={styles.root}>
       <Image
         source={{ uri: restaurant.imageUrl }}
         style={styles.image}
@@ -50,7 +58,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           </AppText>
         </View>
       </View>
-    </View>
+    </PressableScale>
   );
 }
 

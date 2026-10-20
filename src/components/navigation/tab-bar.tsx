@@ -27,7 +27,11 @@ export function TerserahTabBar({ onMatchPress }: TerserahTabBarProps) {
     if (onMatchPress) {
       onMatchPress();
     } else {
-      router.navigate('/match');
+      // Mengarahkan ke /home sambil mengirim parameter openMatch
+      router.navigate({
+        pathname: '/home',
+        params: { openMatch: Date.now().toString() },
+      });
     }
   };
 

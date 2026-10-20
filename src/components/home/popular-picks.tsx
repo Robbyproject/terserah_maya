@@ -13,9 +13,11 @@ export type PopularPicksProps = {
   result: AsyncResult<Restaurant[]>;
   onRetry: () => void;
   onEditCriteria: () => void;
+  /** Dipanggil saat kartu restoran ditekan (untuk membuka detail). */
+  onSelect?: (restaurant: Restaurant) => void;
 };
 
-export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksProps) {
+export function PopularPicks({ result, onRetry, onEditCriteria, onSelect }: PopularPicksProps) {
   return (
     <View style={styles.root}>
       <View style={styles.header}>
@@ -66,7 +68,11 @@ export function PopularPicks({ result, onRetry, onEditCriteria }: PopularPicksPr
       {result.status === 'success' && result.data.length > 0 ? (
         <View style={styles.list}>
           {result.data.map((restaurant) => (
-            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+            <RestaurantCard
+              key={restaurant.id}
+              restaurant={restaurant}
+              onPress={onSelect ? () => onSelect(restaurant) : undefined}
+            />
           ))}
         </View>
       ) : null}
