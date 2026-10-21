@@ -6,7 +6,7 @@ export function useScreenPadding() {
   const insets = useSafeAreaInsets();
 
   return {
-    paddingTop: insets.top + Layout.headerHeight + Spacing.lg,
+    paddingTop: insets.top + Spacing.lg,
     paddingBottom: Layout.tabBarHeight + Layout.tabBarLift + insets.bottom + Spacing.xxl,
   };
 }

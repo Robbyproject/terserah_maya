@@ -135,7 +135,6 @@ export default function HomeScreen() {
 
           <View style={styles.section}>
             <GreetingHeader user={user} onOpenCriteria={flow.openSheet} />
-            {/* PERBAIKAN: setLocationSheetVisible(true) */}
             <LocationPill
               location={location}
               onEdit={() => setLocationSheetVisible(true)}
@@ -154,6 +153,7 @@ export default function HomeScreen() {
         </View>
       </ScrollView>
 
+      {/* Dipertahankan: Sheet Edit Lokasi */}
       {isLocationSheetVisible && (
         <LocationEditSheet
           location={location}

@@ -1,12 +1,16 @@
-import { StyleSheet, View } from 'react-native';
+import { router } from 'expo-router';
+import { View } from 'react-native';
 
 import { RestaurantCard } from '@/components/home/restaurant-card';
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
+import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AsyncResult } from '@/hooks/use-async';
-import { Colors, Radii, Spacing } from '@/theme';
+import { useFavorites } from '@/hooks/use-favorites';
+import { styles } from '@/styles/popular-picks.styles';
+import { Colors, Radii } from '@/theme';
 import type { Restaurant } from '@/types';
 
 export type PopularPicksProps = {
@@ -17,7 +21,14 @@ export type PopularPicksProps = {
   onSelect?: (restaurant: Restaurant) => void;
 };
 
-export function PopularPicks({ result, onRetry, onEditCriteria, onSelect }: PopularPicksProps) {
+export function PopularPicks({
+  result,
+  onRetry,
+  onEditCriteria,
+  onSelect,
+}: PopularPicksProps) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+
   return (
     <View style={styles.root}>
       <View style={styles.header}>
@@ -33,12 +44,16 @@ export function PopularPicks({ result, onRetry, onEditCriteria, onSelect }: Popu
             Paling sering dapet bintang lima minggu ini
           </AppText>
         </View>
-        <View style={styles.seeAll}>
+        <PressableScale
+          accessibilityRole="link"
+          accessibilityLabel="Lihat semua favorit"
+          onPress={() => router.push('/favorites')}
+          style={styles.seeAll}>
           <AppText variant="labelSm" color={Colors.primary}>
             Lihat Semua
           </AppText>
           <Icon name="chevron_right" size={16} color={Colors.primary} />
-        </View>
+        </PressableScale>
       </View>
       {result.status === 'pending' ? (
         <View style={styles.list}>
@@ -72,6 +87,8 @@ export function PopularPicks({ result, onRetry, onEditCriteria, onSelect }: Popu
               key={restaurant.id}
               restaurant={restaurant}
               onPress={onSelect ? () => onSelect(restaurant) : undefined}
+              favorite={isFavorite(restaurant.id)}
+              onToggleFavorite={() => toggleFavorite(restaurant.id)}
             />
           ))}
         </View>
@@ -93,61 +110,3 @@ function PickSkeleton() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  root: {
-    gap: Spacing.md,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: Spacing.sm,
-    paddingHorizontal: Spacing.xs,
-  },
-  headerCopy: {
-    flexShrink: 1,
-    gap: 2,
-  },
-  heading: {
-    fontSize: 18,
-    lineHeight: 25,
-  },
-  subhead: {
-    fontSize: 11,
-    lineHeight: 16,
-  },
-  seeAll: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingTop: 6,
-  },
-  list: {
-    gap: Spacing.md,
-  },
-  message: {
-    alignItems: 'center',
-    gap: Spacing.sm,
-    padding: Spacing.xl,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLow,
-    borderWidth: 1,
-    borderColor: Colors.surfaceContainerHighSoft,
-  },
-  messageText: {
-    textAlign: 'center',
-  },
-  skeletonCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    padding: 14,
-    borderRadius: Radii.lg,
-    backgroundColor: Colors.surfaceContainerLowest,
-  },
-  skeletonBody: {
-    flex: 1,
-    gap: Spacing.sm,
-  },
-});
