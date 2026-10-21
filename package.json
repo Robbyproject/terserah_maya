@@ -6,6 +6,7 @@
     "@expo-google-fonts/material-symbols": "^0.4.50",
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",
     "@expo/ui": "~57.0.24",
+    "@supabase/server": "^1.9.2",
     "eslint-config-expo": "~57.0.2",
     "expo": "~57.0.29",
     "expo-blur": "~57.0.3",
