@@ -3,54 +3,55 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
+  ActivityIndicator,
   Alert,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 import { AnimatedScreen } from '../components/animated-screen';
-import { MOCK_USERS } from '../constants/mockUsers';
 import { Colors } from '../constants/theme';
+import { loginUser } from '../services/user.service';
 import { styles } from '../styles/login.styles';
 
 export default function LoginScreen() {
   const router = useRouter();
 
-  // State untuk form & validasi
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Fungsi penanganan login
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       setErrorMsg('Email/Username dan kata sandi wajib diisi!');
       return;
     }
 
-    const input = email.trim().toLowerCase();
-    const userFound = MOCK_USERS.find(
-      (user) =>
-        (user.email.toLowerCase() === input || user.name.toLowerCase() === input) &&
-        user.password === password
-    );
-
-    if (userFound) {
+    try {
+      setLoading(true);
       setErrorMsg('');
-      Alert.alert('Berhasil Login', `Selamat datang kembali, ${userFound.name}!`, [
+
+      // Panggil backend API Express dengan JWT
+      const user = await loginUser(email.trim(), password);
+
+      Alert.alert('Berhasil Masuk', `Selamat datang kembali, ${user.name}!`, [
         {
-          text: 'OK',
+          text: 'Lanjut',
           onPress: () => {
-            router.replace('/home' as any);
+            router.replace('/home');
           },
         },
       ]);
-    } else {
-      setErrorMsg('Email/Username atau kata sandi salah!');
+    } catch (error: any) {
+      setErrorMsg(error.message || 'Gagal masuk. Periksa kembali akun Anda.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -75,7 +76,6 @@ export default function LoginScreen() {
         {/* Form Card Putih Rounded */}
         <View style={styles.formCard}>
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
             {/* Pesan Error */}
             {errorMsg ? (
               <View style={{ backgroundColor: '#FEE2E2', padding: 12, borderRadius: 8, marginBottom: 16 }}>
@@ -88,11 +88,11 @@ export default function LoginScreen() {
               <Text style={styles.label}>Email / Username</Text>
               <TextInput
                 style={styles.input}
-                placeholder="doa.wahyudi@example.com"
+                placeholder="nama@email.com atau username"
                 placeholderTextColor="#94A3B8"
-                keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
+                editable={!loading}
                 onChangeText={(text) => {
                   setEmail(text);
                   setErrorMsg('');
@@ -110,27 +110,35 @@ export default function LoginScreen() {
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
                   value={password}
+                  editable={!loading}
                   onChangeText={(text) => {
                     setPassword(text);
                     setErrorMsg('');
                   }}
                 />
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                  <Ionicons name={showPassword ? "eye-off-outline" : "eye-outline"} size={20} color="#94A3B8" />
+                  <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#94A3B8" />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Tombol Sign In */}
-            <TouchableOpacity style={styles.primaryButton} onPress={handleLogin} activeOpacity={0.8}>
-              <Text style={styles.primaryButtonText}>Masuk</Text>
+            {/* Tombol Masuk */}
+            <TouchableOpacity
+              style={[styles.primaryButton, loading && { opacity: 0.7 }]}
+              onPress={handleLogin}
+              disabled={loading}
+              activeOpacity={0.8}>
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" />
+              ) : (
+                <Text style={styles.primaryButtonText}>Masuk</Text>
+              )}
             </TouchableOpacity>
 
             {/* Lupa Password */}
             <TouchableOpacity
               style={styles.forgotBtn}
-              onPress={() => router.push('/changepassword' as any)}
-            >
+              onPress={() => router.push('/changepassword')}>
               <Text style={styles.forgotText}>Lupa Kata Sandi?</Text>
             </TouchableOpacity>
 
@@ -155,11 +163,10 @@ export default function LoginScreen() {
             {/* Footer Navigasi Ke Register */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>Belum punya akun? </Text>
-              <TouchableOpacity onPress={() => router.push('/register' as any)}>
+              <TouchableOpacity onPress={() => router.push('/register')}>
                 <Text style={styles.signUpText}>Daftar</Text>
               </TouchableOpacity>
             </View>
-
           </ScrollView>
         </View>
       </View>

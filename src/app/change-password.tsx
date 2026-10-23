@@ -1,18 +1,20 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  TextInput,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PressableScale } from '@/components/ui/pressable-scale';
+import { changeUserPassword, getCurrentUser } from '@/services/user.service';
 import { styles } from '@/styles/change-password.styles';
 import { Colors } from '@/theme';
 
@@ -23,12 +25,13 @@ export default function ChangePasswordScreen() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
       Alert.alert('Periksa kembali', 'Harap lengkapi semua kolom kata sandi.');
       return;
@@ -42,13 +45,25 @@ export default function ChangePasswordScreen() {
       return;
     }
 
-    // TODO: Panggil API Supabase saat integrasi database
-    Alert.alert('Berhasil', 'Kata sandi akunmu berhasil diperbarui!', [
-      {
-        text: 'Kembali ke Profil',
-        onPress: () => router.back(), // Selalu kembali ke Profile
-      },
-    ]);
+    try {
+      setLoading(true);
+      // Ambil user ID dari sesi login aktif di HP
+      const currentUser = await getCurrentUser();
+      
+      // Panggil backend API Express
+      await changeUserPassword(currentUser.id, oldPassword, newPassword);
+
+      Alert.alert('Berhasil', 'Kata sandi akunmu berhasil diperbarui!', [
+        {
+          text: 'Kembali ke Profil',
+          onPress: () => router.back(), // Kembali ke halaman Profile
+        },
+      ]);
+    } catch (error: any) {
+      Alert.alert('Gagal Mengubah Sandi', error.message || 'Terjadi kesalahan');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -92,6 +107,7 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Kata Sandi Saat Ini"
                     secureTextEntry={!showOld}
                     value={oldPassword}
+                    editable={!loading}
                     onChangeText={setOldPassword}
                     placeholder="Masukkan kata sandi lama"
                     placeholderTextColor={Colors.outline}
@@ -117,6 +133,7 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Kata Sandi Baru"
                     secureTextEntry={!showNew}
                     value={newPassword}
+                    editable={!loading}
                     onChangeText={setNewPassword}
                     placeholder="Minimal 6 karakter"
                     placeholderTextColor={Colors.outline}
@@ -142,6 +159,7 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Konfirmasi Kata Sandi Baru"
                     secureTextEntry={!showConfirm}
                     value={confirmPassword}
+                    editable={!loading}
                     onChangeText={setConfirmPassword}
                     placeholder="Ulangi kata sandi baru"
                     placeholderTextColor={Colors.outline}
@@ -163,10 +181,15 @@ export default function ChangePasswordScreen() {
               <PressableScale
                 accessibilityRole="button"
                 onPress={handleSave}
-                style={styles.saveButton}>
-                <AppText variant="labelLg" color={Colors.onPrimary}>
-                  Simpan Kata Sandi
-                </AppText>
+                disabled={loading}
+                style={[styles.saveButton, loading && { opacity: 0.7 }]}>
+                {loading ? (
+                  <ActivityIndicator color={Colors.onPrimary} />
+                ) : (
+                  <AppText variant="labelLg" color={Colors.onPrimary}>
+                    Simpan Kata Sandi
+                  </AppText>
+                )}
               </PressableScale>
             </View>
           </View>
