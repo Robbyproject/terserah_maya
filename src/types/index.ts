@@ -11,7 +11,7 @@ export type {
   RatingOption,
   RelaxedCriterion,
 } from './criteria';
-export type { UserLocation } from './location';
+export type { LocationSource, UserLocation } from './location';
 export type { PriceRange, Restaurant } from './restaurant';
 export type { Sponsor } from './sponsor';
 export type { User } from './user';

@@ -11,3 +11,10 @@ export function formatPriceRange(price: PriceRange): string {
 export function formatDistance(distanceKm: number): string {
   return distanceKm < 1 ? `${Math.round(distanceKm * 1000)}m` : `${distanceKm.toFixed(1)} km`;
 }
+
+// Radius ketidakpastian GPS: 8 -> "±8 m", 1800 -> "±1.8 km".
+export function formatAccuracy(accuracyM: number): string {
+  if (accuracyM < 1000) return `±${Math.round(accuracyM)} m`;
+
+  return `±${(accuracyM / 1000).toFixed(1)} km`;
+}

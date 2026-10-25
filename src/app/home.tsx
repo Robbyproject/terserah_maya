@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Alert, Linking, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Linking, RefreshControl, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppHeader } from '@/components/home/app-header';
@@ -18,7 +18,7 @@ import { useMatchFlow } from '@/hooks/use-match-flow';
 import { useSavedCriteria } from '@/hooks/use-saved-criteria';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
 import { getNearbyPicks, getSponsors } from '@/services/discovery.service';
-import { getActiveLocation, saveActiveLocation } from '@/services/location.service';
+import { getActiveLocation, refreshActiveLocation, saveActiveLocation } from '@/services/location.service';
 import { getCurrentUser } from '@/services/user.service';
 import { Colors, Layout, Spacing } from '@/theme';
 import type { Restaurant, UserLocation } from '@/types';
@@ -47,6 +47,7 @@ export default function HomeScreen() {
   const [detailRestaurant, setDetailRestaurant] = useState<Restaurant | null>(null);
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [isLocationSheetVisible, setLocationSheetVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   // Efek penanganan tombol Match dengan jeda animasi yang mulus
   useEffect(() => {
@@ -61,6 +62,7 @@ export default function HomeScreen() {
 
   const user = userResult.status === 'success' ? userResult.data : null;
   const location = locationResult.status === 'success' ? locationResult.data : null;
+  const locationError = locationResult.status === 'error' ? locationResult.error.message : null;
   const sponsors = sponsorResult.status === 'success' ? sponsorResult.data : null;
 
   const openDetail = useCallback((restaurant: Restaurant) => {
@@ -119,6 +121,23 @@ export default function HomeScreen() {
     [reloadLocation, reloadPicks]
   );
 
+  // Tarik untuk memperbarui: ambil fix GPS baru, lalu muat ulang pill dan daftar.
+  // Kegagalan tidak perlu Alert (stub di web); pill menampilkan alasannya, dan
+  // lokasi lama tetap dipakai kalau refresh gagal.
+  const handleRefresh = useCallback(async () => {
+    setRefreshing(true);
+
+    try {
+      await refreshActiveLocation();
+    } catch {
+      // Biarkan pill / daftar yang melaporkan.
+    } finally {
+      setRefreshing(false);
+      reloadLocation();
+      reloadPicks();
+    }
+  }, [reloadLocation, reloadPicks]);
+
   return (
     <View style={styles.root}>
       <ScrollView
@@ -128,7 +147,15 @@ export default function HomeScreen() {
           padding,
           { paddingTop: insets.top + Spacing.xs },
         ]}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={handleRefresh}
+            tintColor={Colors.primary}
+            colors={[Colors.primary]}
+          />
+        }>
         <View style={styles.inner}>
           <AppHeader label="" />
 
@@ -136,6 +163,7 @@ export default function HomeScreen() {
             <GreetingHeader user={user} onOpenCriteria={flow.openSheet} />
             <LocationPill
               location={location}
+              error={locationError}
               onEdit={() => setLocationSheetVisible(true)}
             />
           </View>

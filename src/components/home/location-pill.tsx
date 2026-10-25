@@ -4,15 +4,20 @@ import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PressableScale } from '@/components/ui/pressable-scale';
 import { Skeleton } from '@/components/ui/skeleton';
+import { formatAccuracy } from '@/lib/format';
 import { Colors, FontFamily, Radii, Shadows, Spacing, Typography } from '@/theme';
 import type { UserLocation } from '@/types';
 
 export type LocationPillProps = {
   location: UserLocation | null;
+  error?: string | null;
   onEdit: () => void;
 };
 
-export function LocationPill({ location, onEdit }: LocationPillProps) {
+export function LocationPill({ location, error = null, onEdit }: LocationPillProps) {
+  // Hanya fix GPS yang bisa mengklaim presisi; area yang diketik bukan posisi.
+  const approximate = location?.source === 'device' && location.precise === false;
+
   return (
     <View style={styles.root}>
       <View style={styles.left}>
@@ -20,8 +25,17 @@ export function LocationPill({ location, onEdit }: LocationPillProps) {
         {location ? (
           <Text style={styles.label} numberOfLines={1} ellipsizeMode="tail">
             <Text style={styles.labelStrong}>{location.label}</Text>
-            <Text style={styles.labelMuted}> • Radius {location.radiusKm} km</Text>
+            {location.source === 'device' &&
+            location.accuracyM !== null &&
+            location.accuracyM !== undefined ? (
+              <Text style={styles.labelMuted}> • {formatAccuracy(location.accuracyM)}</Text>
+            ) : null}
+            {approximate ? <Text style={styles.labelMuted}> • perkiraan</Text> : null}
           </Text>
+        ) : error ? (
+          <AppText variant="labelMd" color={Colors.onSurfaceVariant} numberOfLines={1}>
+            Lokasi belum aktif
+          </AppText>
         ) : (
           <Skeleton width={190} height={18} radius={Radii.sm} />
         )}
@@ -32,7 +46,7 @@ export function LocationPill({ location, onEdit }: LocationPillProps) {
         onPress={onEdit}
         style={styles.edit}>
         <AppText variant="labelMd" color={Colors.primary}>
-          Ubah
+          {!location && error ? 'Atur' : 'Ubah'}
         </AppText>
         <Icon name="tune" size={16} color={Colors.primary} />
       </PressableScale>
