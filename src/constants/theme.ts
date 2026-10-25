@@ -1,34 +1,59 @@
 /**
- * Warna mengikuti DESIGN.md ("Floaty Azure"). Primary = #0284c7.
- * Key lama (text, background, backgroundElement, backgroundSelected, textSecondary)
- * dipertahankan supaya ThemedText / ThemedView tetap jalan.
+ * Warna aplikasi (light & dark) mengikuti palet "Floaty Azure". Primary = #0284C7.
  *
- * Catatan: DESIGN.md tidak punya palet dark mode dan tidak mendefinisikan warna
- * teks sekunder. Nilai bertanda [USULAN] di bawah adalah pilihan sementara, bukan dari DESIGN.md.
+ * Dipakai dua arah:
+ * - Arah lama (login/register/styles): akses `Colors.*` level atas.
+ * - Arah baru (komponen place: ThemedText / ThemedView): akses `Colors.light` /
+ *   `Colors.dark` lewat `useTheme()`. Key lama (text, background, backgroundElement,
+ *   backgroundSelected, textSecondary) dipertahankan, ditambah key tambahan
+ *   (surface, onPrimary, border, borderStrong, error) yang dibutuhkan bottom sheet detail.
+ *
+ * Catatan: DESIGN.md tidak mendefinisikan palet dark mode maupun warna teks sekunder;
+ * nilai di blok `dark` adalah usulan sementara.
  */
 
 import '@/global.css';
 
 import { Platform } from 'react-native';
 
+// Palette Warna Floaty Azure
+export const FloatyAzure = {
+  primary: '#0284C7',     // Primary Azure
+  secondary: '#025091',   // Dark Blue
+  tertiary: '#38BDF8',    // Light Blue
+  neutral: '#0F172A',     // Dark Text / Neutral
+  warning: '#D97706',
+} as const;
+
 export const Colors = {
+  // Akses langsung untuk komponen UI & Form Login/Register
+  ...FloatyAzure,
+  background: '#F8FAFC',
+  cardBg: '#FFFFFF',
+  inputBg: '#F1F5F9',
+  inputBorder: '#E2E8F0',
+  textSecondary: '#64748B',
+
+  // Tema Light (Sesuai struktur bawaan Expo)
   light: {
     text: '#0f172a', // Neutral (Ink Deep Blue)
     background: '#f8fafc', // Canvas
     backgroundElement: '#f0f9ff', // Container fill
     backgroundSelected: '#e0f2fe', // Hover / selected fill, stroke kartu
-    textSecondary: '#475569', // [USULAN]
+    textSecondary: '#475569',
     surface: '#ffffff', // Kartu & sheet
-    primary: '#0284c7', // Sky Blue
+    primary: FloatyAzure.primary,
     onPrimary: '#ffffff',
-    secondary: '#025091', // Deep Cerulean
-    tertiary: '#38bdf8', // Vivid Electric Light Blue
+    secondary: FloatyAzure.secondary,
+    tertiary: FloatyAzure.tertiary,
     border: '#e0f2fe',
     borderStrong: '#bae6fd', // Border input
     error: '#ba1a1a',
   },
+  // Tema Dark (Sesuai struktur bawaan Expo)
   dark: {
-    // [USULAN] seluruh blok dark
+    // [USULAN] seluruh blok dark — dipaket utuh dari detail-page karena nilainya
+    // saling terpasangkan (surface/border/secondary harus satu keluarga).
     text: '#e6f1fb',
     background: '#0b1220',
     backgroundElement: '#14243d',
@@ -49,13 +74,9 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 
 export const Fonts = Platform.select({
   ios: {
-    /** iOS `UIFontDescriptorSystemDesignDefault` */
     sans: 'system-ui',
-    /** iOS `UIFontDescriptorSystemDesignSerif` */
     serif: 'ui-serif',
-    /** iOS `UIFontDescriptorSystemDesignRounded` */
     rounded: 'ui-rounded',
-    /** iOS `UIFontDescriptorSystemDesignMonospaced` */
     mono: 'ui-monospace',
   },
   default: {
