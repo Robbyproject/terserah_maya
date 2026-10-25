@@ -1,10 +1,9 @@
-// src/app/login.tsx
+// File: src/app/login.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -15,7 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedScreen } from '../components/animated-screen';
 import { Colors } from '../constants/theme';
-import { loginUser } from '../services/user.service';
+import { ApiError, loginUser, resendOtp } from '../services/user.service';
 import { styles } from '../styles/login.styles';
 
 export default function LoginScreen() {
@@ -25,10 +24,12 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resendingVerify, setResendingVerify] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [unverifiedEmail, setUnverifiedEmail] = useState<string | null>(null);
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
+    if (!email.trim() || !password) {
       setErrorMsg('Email/Username dan kata sandi wajib diisi!');
       return;
     }
@@ -36,29 +37,48 @@ export default function LoginScreen() {
     try {
       setLoading(true);
       setErrorMsg('');
+      setUnverifiedEmail(null);
 
-      // Panggil backend API Express dengan JWT
-      const user = await loginUser(email.trim(), password);
-
-      Alert.alert('Berhasil Masuk', `Selamat datang kembali, ${user.name}!`, [
-        {
-          text: 'Lanjut',
-          onPress: () => {
-            router.replace('/home');
-          },
-        },
-      ]);
+      await loginUser(email.trim(), password);
+      router.replace('/home' as any);
     } catch (error: any) {
-      setErrorMsg(error.message || 'Gagal masuk. Periksa kembali akun Anda.');
+      setErrorMsg(error?.message || 'Email atau kata sandi salah!');
+      if (
+        (error instanceof ApiError && error.code === 'EMAIL_NOT_VERIFIED') ||
+        error?.code === 'EMAIL_NOT_VERIFIED' ||
+        error?.status === 403
+      ) {
+        setUnverifiedEmail(email.trim());
+      }
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoToVerifyOtp = async () => {
+    const targetEmail = unverifiedEmail || email.trim();
+    if (!targetEmail) return;
+
+    try {
+      setResendingVerify(true);
+      await resendOtp(targetEmail, 'register').catch(() => {
+        // Jika masih dalam cooldown 60 detik, tetap arahkan ke layar OTP
+      });
+      router.push({
+        pathname: '/verify-otp' as any,
+        params: {
+          email: targetEmail,
+          purpose: 'register',
+        },
+      });
+    } finally {
+      setResendingVerify(false);
     }
   };
 
   return (
     <AnimatedScreen>
       <View style={styles.container}>
-        {/* Header Biru Atas */}
         <SafeAreaView edges={['top', 'left', 'right']} style={styles.headerBackground}>
           <View style={styles.versionContainer}>
             <Text style={styles.versionText}>v1.0.0</Text>
@@ -73,34 +93,31 @@ export default function LoginScreen() {
           </View>
         </SafeAreaView>
 
-        {/* Form Card Putih Rounded */}
         <View style={styles.formCard}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-            {/* Pesan Error */}
-            {errorMsg ? (
-              <View style={{ backgroundColor: '#FEE2E2', padding: 12, borderRadius: 8, marginBottom: 16 }}>
-                <Text style={{ color: '#DC2626', fontSize: 13, textAlign: 'center' }}>{errorMsg}</Text>
-              </View>
-            ) : null}
-
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}>
             {/* Email / Username */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Email / Username</Text>
               <TextInput
                 style={styles.input}
-                placeholder="nama@email.com atau username"
+                placeholder="doa@gmail.com atau doawahyudi"
                 placeholderTextColor="#94A3B8"
+                keyboardType="email-address"
                 autoCapitalize="none"
                 value={email}
                 editable={!loading}
                 onChangeText={(text) => {
                   setEmail(text);
                   setErrorMsg('');
+                  setUnverifiedEmail(null);
                 }}
               />
             </View>
 
-            {/* Password */}
+            {/* Kata Sandi */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Kata Sandi</Text>
               <View style={styles.passwordWrapper}>
@@ -116,8 +133,14 @@ export default function LoginScreen() {
                     setErrorMsg('');
                   }}
                 />
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                  <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#94A3B8" />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}>
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#94A3B8"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -135,14 +158,50 @@ export default function LoginScreen() {
               )}
             </TouchableOpacity>
 
-            {/* Lupa Password */}
+            {/* Pesan Error & Tombol Kirim Ulang Verifikasi (jika 403 EMAIL_NOT_VERIFIED) */}
+            {errorMsg ? (
+              <View
+                style={{
+                  backgroundColor: '#FEE2E2',
+                  padding: 12,
+                  borderRadius: 10,
+                  marginTop: 12,
+                  gap: 8,
+                }}>
+                <Text style={{ color: '#DC2626', fontSize: 13, textAlign: 'center' }}>
+                  {errorMsg}
+                </Text>
+                {unverifiedEmail ? (
+                  <TouchableOpacity
+                    onPress={handleGoToVerifyOtp}
+                    disabled={resendingVerify}
+                    style={{
+                      backgroundColor: Colors.primary,
+                      paddingVertical: 10,
+                      paddingHorizontal: 14,
+                      borderRadius: 8,
+                      alignItems: 'center',
+                    }}>
+                    {resendingVerify ? (
+                      <ActivityIndicator size="small" color="#FFFFFF" />
+                    ) : (
+                      <Text style={{ color: '#FFFFFF', fontSize: 13, fontWeight: '700' }}>
+                        Kirim Ulang Kode & Verifikasi Email
+                      </Text>
+                    )}
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            ) : null}
+
+            {/* Lupa Kata Sandi */}
             <TouchableOpacity
               style={styles.forgotBtn}
-              onPress={() => router.push('/changepassword')}>
+              onPress={() => router.push('/changepassword' as any)}>
               <Text style={styles.forgotText}>Lupa Kata Sandi?</Text>
             </TouchableOpacity>
 
-            {/* Pembatas Or */}
+            {/* Pembatas ATAU */}
             <View style={styles.dividerContainer}>
               <View style={styles.divider} />
               <Text style={styles.dividerText}>ATAU</Text>
@@ -160,10 +219,10 @@ export default function LoginScreen() {
               <Text style={styles.socialText}>Lanjutkan dengan Facebook</Text>
             </TouchableOpacity>
 
-            {/* Footer Navigasi Ke Register */}
+            {/* Footer Navigasi ke Register */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>Belum punya akun? </Text>
-              <TouchableOpacity onPress={() => router.push('/register')}>
+              <TouchableOpacity onPress={() => router.push('/register' as any)}>
                 <Text style={styles.signUpText}>Daftar</Text>
               </TouchableOpacity>
             </View>

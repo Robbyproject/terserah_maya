@@ -1,3 +1,4 @@
+// File: src/app/_layout.tsx
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -27,7 +28,6 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const pathname = usePathname();
 
-  // Inisialisasi Hook Match Flow & Criteria secara Global
   const flow = useMatchFlow();
   const { result: criteriaResult } = useAsync(getSavedCriteria);
   const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
@@ -52,7 +52,6 @@ export default function RootLayout() {
     return null;
   }
 
-  // Tampilkan TabBar hanya untuk rute utama
   const tabRoutes = ['/home', '/match', '/profile'];
   const showTabBar = tabRoutes.some((route) => pathname.startsWith(route));
 
@@ -74,17 +73,14 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="login" />
             <Stack.Screen name="register" />
+            <Stack.Screen name="verify-otp" />
             <Stack.Screen name="changepassword" />
-
-            {/* Halaman ganti password dari Profile */}
             <Stack.Screen
               name="change-password"
               options={{
                 animation: 'slide_from_right',
               }}
             />
-
-            {/* Halaman Favorites (Lihat Semua dari Home) */}
             <Stack.Screen
               name="favorites"
               options={{
@@ -92,18 +88,13 @@ export default function RootLayout() {
                 gestureEnabled: true,
               }}
             />
-
-            {/* Saat ke Home, layar masuk dari KIRI (konsisten karena Home berada di tab kiri) */}
             <Stack.Screen
               name="home"
               options={{
                 animation: 'slide_from_left',
               }}
             />
-
             <Stack.Screen name="match" />
-
-            {/* Saat ke Profile, layar masuk dari KANAN (konsisten karena Profile berada di tab kanan) */}
             <Stack.Screen
               name="profile"
               options={{
@@ -112,10 +103,7 @@ export default function RootLayout() {
             />
           </Stack>
 
-          {/* Pasang onMatchPress={flow.openSheet} ke TabBar */}
           {showTabBar && <TerserahTabBar onMatchPress={flow.openSheet} />}
-
-          {/* Render Modal Match Flow secara Global */}
           <MatchFlowModals flow={flow} criteria={criteria} />
         </View>
       </ThemeProvider>

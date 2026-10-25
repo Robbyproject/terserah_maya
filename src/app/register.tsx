@@ -1,10 +1,9 @@
-// src/app/register.tsx
+// File: src/app/register.tsx
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -15,13 +14,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { AnimatedScreen } from '../components/animated-screen';
 import { Colors } from '../constants/theme';
-import { registerUser } from '../services/user.service';
+import {
+  AUTH_VALIDATION_MESSAGES,
+  EMAIL_REGEX,
+  registerUser,
+  STRONG_PASSWORD_REGEX,
+  USERNAME_REGEX,
+} from '../services/user.service';
 import { styles } from '../styles/register.styles';
 
 export default function RegisterScreen() {
   const router = useRouter();
 
-  // State Form
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,34 +38,42 @@ export default function RegisterScreen() {
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleRegister = async () => {
-    // 1. Validasi Kolom Kosong
-    if (!username.trim() || !email.trim() || !password || !confirmPassword) {
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // 1. Validasi kolom kosong
+    if (!trimmedUsername || !trimmedEmail || !password || !confirmPassword) {
       setErrorMsg('Semua kolom wajib diisi!');
       return;
     }
 
-    // 2. Validasi Format Email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.trim())) {
-      setErrorMsg('Masukkan alamat email yang valid!');
+    // 2. Validasi username (§1: 3-30 karakter, huruf/angka/underscore)
+    if (!USERNAME_REGEX.test(trimmedUsername)) {
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.usernameLength);
       return;
     }
 
-    // 3. Validasi Panjang Sandi
-    if (password.length < 6) {
-      setErrorMsg('Kata sandi minimal 6 karakter!');
+    // 3. Validasi email (§1)
+    if (!EMAIL_REGEX.test(trimmedEmail)) {
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.emailInvalid);
       return;
     }
 
-    // 4. Validasi Kecocokan Konfirmasi Sandi
+    // 4. Validasi password (§1: min 8 karakter, huruf + angka + simbol)
+    if (!STRONG_PASSWORD_REGEX.test(password)) {
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.passwordWeak);
+      return;
+    }
+
+    // 5. Validasi konfirmasi password
     if (password !== confirmPassword) {
-      setErrorMsg('Konfirmasi kata sandi tidak cocok!');
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.passwordMismatch);
       return;
     }
 
-    // 5. Validasi Syarat & Ketentuan
+    // 6. Validasi persetujuan Syarat & Ketentuan
     if (!agreed) {
-      setErrorMsg('Anda harus menyetujui Syarat & Ketentuan!');
+      setErrorMsg('Anda harus menyetujui Syarat & Ketentuan.');
       return;
     }
 
@@ -69,19 +81,19 @@ export default function RegisterScreen() {
       setLoading(true);
       setErrorMsg('');
 
-      // Panggil backend API Express dengan JWT
-      const user = await registerUser(username.trim(), email.trim().toLowerCase(), password);
+      // POST /users/register -> HTTP 202 (Kode OTP dikirim ke email, belum auto-login)
+      const result = await registerUser(trimmedUsername, trimmedEmail, password);
 
-      Alert.alert('Pendaftaran Berhasil', `Selamat datang, ${user.name}! Akunmu siap digunakan.`, [
-        {
-          text: 'Mulai',
-          onPress: () => {
-            router.replace('/home');
-          },
+      router.push({
+        pathname: '/verify-otp' as any,
+        params: {
+          email: result.email || trimmedEmail,
+          purpose: 'register',
+          infoMessage: result.message,
         },
-      ]);
+      });
     } catch (error: any) {
-      setErrorMsg(error.message || 'Pendaftaran gagal. Silakan coba lagi.');
+      setErrorMsg(error?.message || 'Pendaftaran gagal. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -90,7 +102,6 @@ export default function RegisterScreen() {
   return (
     <AnimatedScreen>
       <View style={styles.container}>
-        {/* Header Biru Atas */}
         <SafeAreaView edges={['top', 'left', 'right']} style={styles.headerBackground}>
           <View style={styles.topBar}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
@@ -107,24 +118,19 @@ export default function RegisterScreen() {
           </View>
         </SafeAreaView>
 
-        {/* Form Card Putih Rounded */}
         <View style={styles.formCard}>
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-            {/* Pesan Error */}
-            {errorMsg ? (
-              <View style={{ backgroundColor: '#FEE2E2', padding: 12, borderRadius: 8, marginBottom: 16 }}>
-                <Text style={{ color: '#DC2626', fontSize: 13, textAlign: 'center' }}>{errorMsg}</Text>
-              </View>
-            ) : null}
-
-            {/* Nama / Username */}
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}>
+            {/* Username */}
             <View style={styles.inputContainer}>
-              <Text style={styles.label}>Nama Lengkap / Username</Text>
+              <Text style={styles.label}>Username</Text>
               <TextInput
                 style={styles.input}
-                placeholder="Robby Permana"
+                placeholder="doawahyudi (3–30 huruf/angka/_)"
                 placeholderTextColor="#94A3B8"
-                autoCapitalize="words"
+                autoCapitalize="none"
                 value={username}
                 editable={!loading}
                 onChangeText={(text) => {
@@ -139,7 +145,7 @@ export default function RegisterScreen() {
               <Text style={styles.label}>Email</Text>
               <TextInput
                 style={styles.input}
-                placeholder="nama@email.com"
+                placeholder="nama@gmail.com"
                 placeholderTextColor="#94A3B8"
                 keyboardType="email-address"
                 autoCapitalize="none"
@@ -150,16 +156,18 @@ export default function RegisterScreen() {
                   setErrorMsg('');
                 }}
               />
-              <Text style={styles.warningText}>ⓘ Gunakan alamat email aktif Anda</Text>
+              <Text style={styles.warningText}>
+                ⓘ Kode verifikasi 6 digit akan dikirim ke email ini
+              </Text>
             </View>
 
-            {/* Password */}
+            {/* Kata Sandi */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Kata Sandi</Text>
               <View style={{ position: 'relative', justifyContent: 'center' }}>
                 <TextInput
                   style={[styles.input, { paddingRight: 45 }]}
-                  placeholder="Minimal 6 karakter"
+                  placeholder="Min. 8 karakter (huruf + angka + simbol)"
                   placeholderTextColor="#94A3B8"
                   secureTextEntry={!showPassword}
                   value={password}
@@ -172,12 +180,16 @@ export default function RegisterScreen() {
                 <TouchableOpacity
                   onPress={() => setShowPassword(!showPassword)}
                   style={{ position: 'absolute', right: 12, height: 40, justifyContent: 'center' }}>
-                  <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#94A3B8" />
+                  <Ionicons
+                    name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#94A3B8"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Confirm Password */}
+            {/* Konfirmasi Kata Sandi */}
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Konfirmasi Kata Sandi</Text>
               <View style={{ position: 'relative', justifyContent: 'center' }}>
@@ -196,7 +208,11 @@ export default function RegisterScreen() {
                 <TouchableOpacity
                   onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                   style={{ position: 'absolute', right: 12, height: 40, justifyContent: 'center' }}>
-                  <Ionicons name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color="#94A3B8" />
+                  <Ionicons
+                    name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                    color="#94A3B8"
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -220,7 +236,7 @@ export default function RegisterScreen() {
               </Text>
             </TouchableOpacity>
 
-            {/* Tombol Register */}
+            {/* Tombol Buat Akun */}
             <TouchableOpacity
               style={[styles.primaryButton, loading && { opacity: 0.7 }]}
               onPress={handleRegister}
@@ -233,10 +249,25 @@ export default function RegisterScreen() {
               )}
             </TouchableOpacity>
 
+            {/* Banner Error di bawah tombol */}
+            {errorMsg ? (
+              <View
+                style={{
+                  backgroundColor: '#FEE2E2',
+                  padding: 12,
+                  borderRadius: 8,
+                  marginTop: 12,
+                }}>
+                <Text style={{ color: '#DC2626', fontSize: 13, textAlign: 'center' }}>
+                  {errorMsg}
+                </Text>
+              </View>
+            ) : null}
+
             {/* Footer Link ke Login */}
             <View style={styles.footer}>
               <Text style={styles.footerText}>Sudah punya akun? </Text>
-              <TouchableOpacity onPress={() => router.push('/login')}>
+              <TouchableOpacity onPress={() => router.push('/login' as any)}>
                 <Text style={styles.signUpText}>Masuk</Text>
               </TouchableOpacity>
             </View>
