@@ -17,13 +17,21 @@ import {
 } from '@/constants/match';
 import { styles } from '@/styles/criteria.styles';
 import { Colors } from '@/theme';
-import type { BudgetOption, BudgetTier, Distance, MatchCriteria, MinRating } from '@/types';
+import type {
+  BudgetOption,
+  BudgetTier,
+  CravingKey,
+  Distance,
+  MatchCriteria,
+  MinRating,
+} from '@/types';
 
 export type CriteriaSheetProps = {
   criteria: MatchCriteria | null;
   onClose: () => void;
   onSpin: (criteria: MatchCriteria) => void;
   spinning?: boolean;
+  error?: string | null;
 };
 
 export function CriteriaSheet({ onClose, ...restProps }: CriteriaSheetProps) {
@@ -39,10 +47,13 @@ function CriteriaSheetContent({
   onClose,
   onSpin,
   spinning = false,
+  error = null,
 }: CriteriaSheetProps) {
   const { close, panGesture } = useBottomSheet();
   const [budgetTier, setBudgetTier] = useState<BudgetTier>(criteria?.budgetTier ?? 'pas');
-  const [cravings, setCravings] = useState<string[]>(criteria?.cravings ?? [DEFAULT_CRAVING]);
+  const [cravings, setCravings] = useState<CravingKey[]>(
+    criteria?.cravings ?? [DEFAULT_CRAVING]
+  );
   const [distance, setDistance] = useState<Distance>(criteria?.distance ?? '3km');
   const [minRating, setMinRating] = useState<MinRating>(criteria?.minRating ?? '4.0');
 
@@ -50,7 +61,7 @@ function CriteriaSheetContent({
   const distanceOption = DISTANCE_OPTIONS.find((option) => option.value === distance) ?? DISTANCE_OPTIONS[0];
   const ratingOption = RATING_OPTIONS.find((option) => option.value === minRating) ?? RATING_OPTIONS[0];
 
-  const toggleCraving = (craving: string) => {
+  const toggleCraving = (craving: CravingKey) => {
     if (craving === DEFAULT_CRAVING) {
       setCravings([DEFAULT_CRAVING]);
       return;
@@ -157,12 +168,12 @@ function CriteriaSheetContent({
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.cravings}>
-            {CRAVING_OPTIONS.map((craving) => (
+            {CRAVING_OPTIONS.map((option) => (
               <Chip
-                key={craving}
-                label={craving}
-                variant={cravings.includes(craving) ? 'selected' : 'tint'}
-                onPress={() => toggleCraving(craving)}
+                key={option.key}
+                label={option.label}
+                variant={cravings.includes(option.key) ? 'selected' : 'tint'}
+                onPress={() => toggleCraving(option.key)}
               />
             ))}
           </ScrollView>
@@ -220,6 +231,11 @@ function CriteriaSheetContent({
       </ScrollView>
 
       <View style={styles.footer}>
+        {error ? (
+          <AppText variant="labelSm" color={Colors.error} style={styles.error}>
+            {error}
+          </AppText>
+        ) : null}
         <PillButton
           label="Acak!"
           icon="casino"

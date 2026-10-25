@@ -29,12 +29,20 @@ import { PressableScale } from '@/components/ui/pressable-scale';
 import { BUDGET_TIERS } from '@/constants/match';
 import { formatDistance } from '@/lib/format';
 import { Colors, FontFamily, Radii, Shadows, Spacing } from '@/theme';
-import type { BudgetTier, Restaurant } from '@/types';
+import type { BudgetTier, RelaxedCriterion, Restaurant } from '@/types';
 
 export type MatchResultModalProps = {
   restaurant: Restaurant;
   onClose: () => void;
   onRespin: () => void;
+  relaxed?: RelaxedCriterion[];
+  canRespin?: boolean;
+};
+
+const RELAXED_LABELS: Record<RelaxedCriterion, string> = {
+  craving: 'selera',
+  budget: 'budget',
+  rating: 'rating',
 };
 
 const CONFETTI = [
@@ -46,7 +54,13 @@ const CONFETTI = [
   { left: '92%', color: Colors.tertiaryFixed, delay: 400 },
 ] as const;
 
-export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultModalProps) {
+export function MatchResultModal({
+  restaurant,
+  onClose,
+  onRespin,
+  relaxed = [],
+  canRespin = true,
+}: MatchResultModalProps) {
   const openMaps = () => {
     const query = restaurant.address ? `${restaurant.name}, ${restaurant.address}` : restaurant.name;
     Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`);
@@ -158,6 +172,11 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
                 <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
                   📍 {formatDistance(restaurant.distanceKm)} dari posisimu
                 </AppText>
+                {relaxed.length > 0 ? (
+                  <AppText variant="labelSm" color={Colors.onSurfaceVariant}>
+                    Kriteria dilonggarkan: {relaxed.map((item) => RELAXED_LABELS[item]).join(', ')}
+                  </AppText>
+                ) : null}
               </View>
             </View>
           </View>
@@ -172,6 +191,7 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
               label="Cari Lain 🎲"
               variant="neutral"
               icon="casino"
+              disabled={!canRespin}
               onPress={onRespin}
               style={styles.actionButton}
             />

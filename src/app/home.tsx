@@ -15,8 +15,8 @@ import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { PlaceDetailSheet, type PlaceDetailSheetHandle } from '@/components/place/place-detail-sheet';
 import { useAsync } from '@/hooks/use-async';
 import { useMatchFlow } from '@/hooks/use-match-flow';
+import { useSavedCriteria } from '@/hooks/use-saved-criteria';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
-import { getSavedCriteria } from '@/services/criteria.service';
 import { getNearbyPicks, getSponsors } from '@/services/discovery.service';
 import { getActiveLocation, saveActiveLocation } from '@/services/location.service';
 import { getCurrentUser } from '@/services/user.service';
@@ -37,7 +37,7 @@ export default function HomeScreen() {
 
   const { result: userResult } = useAsync(getCurrentUser);
   const { result: locationResult, reload: reloadLocation } = useAsync(getActiveLocation);
-  const { result: criteriaResult } = useAsync(getSavedCriteria);
+  const criteria = useSavedCriteria();
   const { result: sponsorResult } = useAsync(getSponsors);
   const { result: picksResult, reload: reloadPicks } = useAsync(getNearbyPicks);
   const flow = useMatchFlow();
@@ -61,7 +61,6 @@ export default function HomeScreen() {
 
   const user = userResult.status === 'success' ? userResult.data : null;
   const location = locationResult.status === 'success' ? locationResult.data : null;
-  const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
   const sponsors = sponsorResult.status === 'success' ? sponsorResult.data : null;
 
   const openDetail = useCallback((restaurant: Restaurant) => {

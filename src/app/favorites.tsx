@@ -14,8 +14,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useAsync } from '@/hooks/use-async';
 import { useFavorites } from '@/hooks/use-favorites';
 import { useMatchFlow } from '@/hooks/use-match-flow';
+import { useSavedCriteria } from '@/hooks/use-saved-criteria';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
-import { getSavedCriteria } from '@/services/criteria.service';
 import { getAllPicks } from '@/services/discovery.service';
 import { styles } from '@/styles/favorite.style';
 import { Colors, Radii, Spacing } from '@/theme';
@@ -29,7 +29,7 @@ const HEADER_CONTENT_ESTIMATE = 130;
 export default function FavoritesScreen() {
   const padding = useScreenPadding();
   const { result, reload } = useAsync(getAllPicks);
-  const { result: criteriaResult } = useAsync(getSavedCriteria);
+  const criteria = useSavedCriteria();
   const flow = useMatchFlow();
   const [filter, setFilter] = useState(ALL_CATEGORIES);
   const [headerHeight, setHeaderHeight] = useState(() => padding.paddingTop + HEADER_CONTENT_ESTIMATE);
@@ -40,7 +40,6 @@ export default function FavoritesScreen() {
     listRef.current?.scrollToOffset({ offset: 0 });
   }, [filter]);
 
-  const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
   const restaurants = result.status === 'success' ? result.data : [];
   const categories = Array.from(new Set(restaurants.map((restaurant) => restaurant.category)));
   const visible =

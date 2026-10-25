@@ -1,5 +1,7 @@
 import { API_BASE_URL } from '@/constants/config';
 
+type HttpMethod = 'GET' | 'POST';
+
 const TIMEOUT_MS = 10_000;
 
 async function readErrorMessage(response: Response): Promise<string | null> {
@@ -21,7 +23,7 @@ function isAbort(cause: unknown): boolean {
   );
 }
 
-export async function apiGet<T>(path: string): Promise<T> {
+async function request<T>(method: HttpMethod, path: string, body?: unknown): Promise<T> {
   if (!API_BASE_URL) {
     throw new Error('EXPO_PUBLIC_API_BASE_URL is not configured');
   }
@@ -30,11 +32,17 @@ export async function apiGet<T>(path: string): Promise<T> {
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
-    const response = await fetch(`${API_BASE_URL}${path}`, { signal: controller.signal });
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      method,
+      signal: controller.signal,
+      ...(body === undefined
+        ? {}
+        : { headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }),
+    });
 
     if (!response.ok) {
       const message = await readErrorMessage(response);
-      throw new Error(message ?? `GET ${path} gagal dengan status ${response.status}`);
+      throw new Error(message ?? `${method} ${path} gagal dengan status ${response.status}`);
     }
 
     return (await response.json()) as T;
@@ -57,4 +65,12 @@ export async function apiGet<T>(path: string): Promise<T> {
   } finally {
     clearTimeout(timer);
   }
+}
+
+export function apiGet<T>(path: string): Promise<T> {
+  return request<T>('GET', path);
+}
+
+export function apiPost<T>(path: string, body: unknown): Promise<T> {
+  return request<T>('POST', path, body);
 }

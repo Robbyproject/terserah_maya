@@ -15,6 +15,7 @@ export function MatchFlowModals({ flow, criteria }: MatchFlowModalsProps) {
         <CriteriaSheet
           criteria={criteria}
           spinning={flow.spinning}
+          error={flow.error}
           onClose={flow.closeSheet}
           onSpin={flow.spin}
         />
@@ -22,6 +23,8 @@ export function MatchFlowModals({ flow, criteria }: MatchFlowModalsProps) {
       {flow.match ? (
         <MatchResultModal
           restaurant={flow.match}
+          relaxed={flow.relaxed}
+          canRespin={flow.canRespin}
           onClose={flow.dismissMatch}
           onRespin={flow.respin}
         />

@@ -1,4 +1,4 @@
-import type { BudgetOption, DistanceOption, RatingOption } from '@/types';
+import type { BudgetOption, CravingKey, CravingOption, DistanceOption, RatingOption } from '@/types';
 
 export const BUDGET_TIERS: BudgetOption[] = [
   {
@@ -48,15 +48,15 @@ export const BUDGET_TIERS: BudgetOption[] = [
   },
 ];
 
-export const DEFAULT_CRAVING = '🎲 Bebas Apapun';
+export const DEFAULT_CRAVING: CravingKey = 'bebas';
 
-export const CRAVING_OPTIONS: string[] = [
-  DEFAULT_CRAVING,
-  '🍜 Bakso & Mie',
-  '🍚 Nasi Padang',
-  '🍗 Ayam Geprek',
-  '🍢 Sate & Street Food',
-  '☕ Kopi & Snack',
+export const CRAVING_OPTIONS: CravingOption[] = [
+  { key: DEFAULT_CRAVING, label: '🎲 Bebas Apapun' },
+  { key: 'bakso_mie', label: '🍜 Bakso & Mie' },
+  { key: 'nasi_padang', label: '🍚 Nasi Padang' },
+  { key: 'ayam_geprek', label: '🍗 Ayam Geprek' },
+  { key: 'sate_street', label: '🍢 Sate & Street Food' },
+  { key: 'kopi_snack', label: '☕ Kopi & Snack' },
 ];
 
 export const DISTANCE_OPTIONS: DistanceOption[] = [

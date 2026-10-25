@@ -1,7 +1,29 @@
 import { mockCriteria } from '@/mocks/criteria';
-import { simulateNetwork } from '@/mocks/delay';
 import type { MatchCriteria } from '@/types';
 
-export function getSavedCriteria(): Promise<MatchCriteria> {
-  return simulateNetwork(mockCriteria, 450);
+// Kriteria terakhir yang dipakai pengguna. Disimpan di memori modul, sama
+// seperti favorites.service.ts; ganti ke AsyncStorage kalau harus bertahan
+// setelah aplikasi ditutup.
+let savedCriteria: MatchCriteria = { ...mockCriteria, cravings: [...mockCriteria.cravings] };
+const listeners = new Set<() => void>();
+
+function emit() {
+  listeners.forEach((listener) => listener());
+}
+
+export function subscribeToCriteria(listener: () => void): () => void {
+  listeners.add(listener);
+
+  return () => {
+    listeners.delete(listener);
+  };
+}
+
+export function getCriteriaSnapshot(): MatchCriteria {
+  return savedCriteria;
+}
+
+export function saveCriteria(next: MatchCriteria): void {
+  savedCriteria = { ...next, cravings: [...next.cravings] };
+  emit();
 }

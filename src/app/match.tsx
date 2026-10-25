@@ -5,17 +5,15 @@ import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
-import { useAsync } from '@/hooks/use-async';
 import { useMatchFlow } from '@/hooks/use-match-flow';
+import { useSavedCriteria } from '@/hooks/use-saved-criteria';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
-import { getSavedCriteria } from '@/services/criteria.service';
 import { Colors, Layout, Radii, Shadows, Spacing } from '@/theme';
 
 export default function MatchScreen() {
   const padding = useScreenPadding();
-  const { result } = useAsync(getSavedCriteria);
+  const criteria = useSavedCriteria();
   const flow = useMatchFlow();
-  const criteria = result.status === 'success' ? result.data : null;
 
   return (
     <View style={styles.root}>

@@ -17,9 +17,8 @@ import { PlusJakartaSans_800ExtraBold } from '@expo-google-fonts/plus-jakarta-sa
 import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import { MatchFlowModals } from '@/components/match/match-flow-modals';
 import { TerserahTabBar } from '@/components/navigation/tab-bar';
-import { useAsync } from '@/hooks/use-async';
 import { useMatchFlow } from '@/hooks/use-match-flow';
-import { getSavedCriteria } from '@/services/criteria.service';
+import { useSavedCriteria } from '@/hooks/use-saved-criteria';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,8 +28,7 @@ export default function RootLayout() {
 
   // Inisialisasi Hook Match Flow & Criteria secara Global
   const flow = useMatchFlow();
-  const { result: criteriaResult } = useAsync(getSavedCriteria);
-  const criteria = criteriaResult.status === 'success' ? criteriaResult.data : null;
+  const criteria = useSavedCriteria();
 
   const [fontsLoaded, fontError] = useFonts({
     PlusJakartaSans_400Regular,

@@ -166,6 +166,10 @@ export const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: Colors.surfaceContainerLow,
   },
+  error: {
+    marginBottom: Spacing.sm,
+    textAlign: 'center',
+  },
   cta: {
     width: '100%',
   },
