@@ -11,7 +11,6 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```
 
 2. Start the app
-
    ```bash
    npx expo start
    ```
@@ -37,7 +36,7 @@ Proyek ini menggunakan **EAS Build** (Expo Application Services) untuk melakukan
    ```bash
    npm install -g eas-cli
    ```
-2. Pastikan Anda sudah memiliki akun [Expo](https://expo.dev) dan sudah *login* di terminal:
+2. Pastikan Anda sudah memiliki akun [Expo](https://expo.dev) dan sudah _login_ di terminal:
    ```bash
    eas login
    ```
@@ -80,8 +79,8 @@ eas build -p android --profile preview
 
 ### Cara Mengunduh & Memasang APK
 
-1. Setelah proses *build* selesai (beberapa menit), terminal akan menampilkan **URL unduhan** dan **Kode QR**.
-2. Anda juga dapat melihat daftar hasil *build* melalui [Expo Dashboard](https://expo.dev/dashboard).
+1. Setelah proses _build_ selesai (beberapa menit), terminal akan menampilkan **URL unduhan** dan **Kode QR**.
+2. Anda juga dapat melihat daftar hasil _build_ melalui [Expo Dashboard](https://expo.dev/dashboard).
 3. Scan Kode QR menggunakan HP Android atau buka URL di browser HP Anda untuk mengunduh dan menginstal file `.apk`.
 
 ---

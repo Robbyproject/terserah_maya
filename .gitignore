@@ -30,9 +30,10 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
-
+# Abaikan semua file yang berawalan .env
+.env*
+# Kecuali .env.example
+!.env.example
 # typescript
 *.tsbuildinfo
 
