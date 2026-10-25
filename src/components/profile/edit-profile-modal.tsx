@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
     Alert,
     KeyboardAvoidingView,
@@ -31,11 +31,24 @@ export function EditProfileModal({
 }: EditProfileModalProps) {
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
+  const [lastInitials, setLastInitials] = useState({
+    initialName,
+    initialEmail,
+    visible,
+  });
 
-  useEffect(() => {
+  // Reset form saat modal dibuka atau nilai awal dari parent berubah
+  // (adjusting state during render — pola yang direkomendasikan React untuk
+  // merespon perubahan props, menggantikan setState di dalam useEffect).
+  if (
+    lastInitials.initialName !== initialName ||
+    lastInitials.initialEmail !== initialEmail ||
+    lastInitials.visible !== visible
+  ) {
+    setLastInitials({ initialName, initialEmail, visible });
     setName(initialName);
     setEmail(initialEmail);
-  }, [initialName, initialEmail, visible]);
+  }
 
   const handleSave = () => {
     const trimmedName = name.trim();

@@ -1,18 +1,27 @@
+// File: src/app/change-password.tsx
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    TextInput,
-    View,
+  ActivityIndicator,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
 import { PressableScale } from '@/components/ui/pressable-scale';
+import {
+  AUTH_VALIDATION_MESSAGES,
+  changeUserPassword,
+  getCurrentUser,
+  STRONG_PASSWORD_REGEX,
+} from '@/services/user.service';
 import { styles } from '@/styles/change-password.styles';
 import { Colors } from '@/theme';
 
@@ -23,37 +32,51 @@ export default function ChangePasswordScreen() {
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const [showOld, setShowOld] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Periksa kembali', 'Harap lengkapi semua kolom kata sandi.');
-      return;
-    }
-    if (newPassword.length < 6) {
-      Alert.alert('Kata Sandi Lemah', 'Kata sandi baru minimal harus 6 karakter.');
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      Alert.alert('Tidak Cocok', 'Konfirmasi kata sandi baru tidak sesuai.');
+      setErrorMsg('Harap lengkapi semua kolom kata sandi.');
       return;
     }
 
-    // TODO: Panggil API Supabase saat integrasi database
-    Alert.alert('Berhasil', 'Kata sandi akunmu berhasil diperbarui!', [
-      {
-        text: 'Kembali ke Profil',
-        onPress: () => router.back(), // Selalu kembali ke Profile
-      },
-    ]);
+    if (!STRONG_PASSWORD_REGEX.test(newPassword)) {
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.passwordWeak);
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setErrorMsg(AUTH_VALIDATION_MESSAGES.passwordMismatch);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrorMsg('');
+
+      const currentUser = await getCurrentUser();
+      const res = await changeUserPassword(currentUser.id, oldPassword, newPassword);
+
+      Alert.alert('Berhasil', res?.message || 'Kata sandi berhasil diperbarui.', [
+        {
+          text: 'Kembali ke Profil',
+          onPress: () => router.back(),
+        },
+      ]);
+    } catch (error: any) {
+      setErrorMsg(error?.message || 'Kata sandi lama salah.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      {/* Header dengan Tombol Kembali ke Profile */}
       <View style={styles.header}>
         <PressableScale
           accessibilityRole="button"
@@ -73,18 +96,19 @@ export default function ChangePasswordScreen() {
         style={{ flex: 1 }}>
         <ScrollView
           style={styles.scroll}
+          keyboardShouldPersistTaps="handled"
           contentContainerStyle={[styles.content, { paddingBottom: Math.max(insets.bottom, 24) }]}
           showsVerticalScrollIndicator={false}>
           <View style={styles.inner}>
             <View style={styles.headingBlock}>
               <AppText variant="headlineSm">Keamanan Akun</AppText>
               <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
-                Pastikan kata sandi barumu unik dan sulit ditebak orang lain.
+                Kata sandi baru minimal 8 karakter & wajib kombinasi huruf, angka, dan simbol.
               </AppText>
             </View>
 
             <View style={styles.card}>
-              {/* Kata Sandi Lama */}
+              {/* Kata Sandi Saat Ini */}
               <View style={styles.inputGroup}>
                 <AppText variant="labelMd">Kata Sandi Saat Ini</AppText>
                 <View style={styles.inputWrapper}>
@@ -92,7 +116,11 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Kata Sandi Saat Ini"
                     secureTextEntry={!showOld}
                     value={oldPassword}
-                    onChangeText={setOldPassword}
+                    editable={!loading}
+                    onChangeText={(text) => {
+                      setOldPassword(text);
+                      setErrorMsg('');
+                    }}
                     placeholder="Masukkan kata sandi lama"
                     placeholderTextColor={Colors.outline}
                     style={styles.input}
@@ -117,8 +145,12 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Kata Sandi Baru"
                     secureTextEntry={!showNew}
                     value={newPassword}
-                    onChangeText={setNewPassword}
-                    placeholder="Minimal 6 karakter"
+                    editable={!loading}
+                    onChangeText={(text) => {
+                      setNewPassword(text);
+                      setErrorMsg('');
+                    }}
+                    placeholder="Min. 8 karakter (huruf + angka + simbol)"
                     placeholderTextColor={Colors.outline}
                     style={styles.input}
                   />
@@ -142,7 +174,11 @@ export default function ChangePasswordScreen() {
                     accessibilityLabel="Konfirmasi Kata Sandi Baru"
                     secureTextEntry={!showConfirm}
                     value={confirmPassword}
-                    onChangeText={setConfirmPassword}
+                    editable={!loading}
+                    onChangeText={(text) => {
+                      setConfirmPassword(text);
+                      setErrorMsg('');
+                    }}
                     placeholder="Ulangi kata sandi baru"
                     placeholderTextColor={Colors.outline}
                     style={styles.input}
@@ -163,11 +199,29 @@ export default function ChangePasswordScreen() {
               <PressableScale
                 accessibilityRole="button"
                 onPress={handleSave}
-                style={styles.saveButton}>
-                <AppText variant="labelLg" color={Colors.onPrimary}>
-                  Simpan Kata Sandi
-                </AppText>
+                disabled={loading}
+                style={[styles.saveButton, loading && { opacity: 0.7 }]}>
+                {loading ? (
+                  <ActivityIndicator color={Colors.onPrimary} />
+                ) : (
+                  <AppText variant="labelLg" color={Colors.onPrimary}>
+                    Simpan Kata Sandi
+                  </AppText>
+                )}
               </PressableScale>
+
+              {errorMsg ? (
+                <View
+                  style={{
+                    backgroundColor: '#FEE2E2',
+                    padding: 12,
+                    borderRadius: 8,
+                  }}>
+                  <Text style={{ color: '#DC2626', fontSize: 13, textAlign: 'center' }}>
+                    {errorMsg}
+                  </Text>
+                </View>
+              ) : null}
             </View>
           </View>
         </ScrollView>

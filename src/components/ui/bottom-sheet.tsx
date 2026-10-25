@@ -1,3 +1,10 @@
+/* eslint-disable react-hooks/immutability --
+ * Reanimated shared values bersifat mutable (sharedValue.value = ...) dan
+ * berubah dari dalam gesture/effect callback. React Compiler lint belum
+ * memahami pola ini sehingga menandai penggunaan yang valid sebagai
+ * pelanggaran immutability (false positive yang dikenal). Rule ini
+ * dinonaktifkan khusus untuk file ini.
+ */
 import { BlurView } from 'expo-blur';
 import {
   createContext,

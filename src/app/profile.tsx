@@ -43,7 +43,7 @@ export default function ProfileScreen() {
         showsVerticalScrollIndicator={false}>
         <View style={styles.inner}>
           <View style={styles.pageHeading}>
-            <AppText variant="headlineLg">Profil</AppText>
+            <AppText variant="headlineLg">Profile</AppText>
             <AppText variant="bodySm" color={Colors.onSurfaceVariant}>
               Kelola informasi dan pengaturan akunmu
             </AppText>
