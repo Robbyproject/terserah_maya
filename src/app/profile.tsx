@@ -8,7 +8,8 @@ import { ProfileCard } from '@/components/profile/profile-card';
 import { AppText } from '@/components/ui/app-text';
 import { useAsync } from '@/hooks/use-async';
 import { useScreenPadding } from '@/hooks/use-screen-padding';
-import { getCurrentUser } from '@/services/user.service';
+import { chooseAvatar } from '@/services/avatar-picker';
+import { getCurrentUser, updateUserAvatar } from '@/services/user.service';
 import { styles } from '@/styles/profile.styles';
 import { Colors } from '@/theme';
 import type { User } from '@/types';
@@ -21,11 +22,33 @@ export default function ProfileScreen() {
   const [profileOverrides, setProfileOverrides] = useState<Partial<User>>({});
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
   const user = result.status === 'success' ? { ...result.data, ...profileOverrides } : null;
 
   const handleSaveProfile = (name: string, email: string) => {
-    setProfileOverrides({ name, email });
+    setProfileOverrides((prev) => ({ ...prev, name, email }));
+  };
+
+  const handleChangeAvatar = async () => {
+    if (!user) return;
+
+    const uri = await chooseAvatar();
+    if (!uri) return;
+
+    const previous = user.avatarUrl;
+    setProfileOverrides((prev) => ({ ...prev, avatarUrl: uri })); // tampil langsung
+    setIsUploadingAvatar(true);
+
+    try {
+      const updated = await updateUserAvatar(user.id, uri);
+      setProfileOverrides((prev) => ({ ...prev, avatarUrl: updated.avatarUrl }));
+    } catch (e) {
+      setProfileOverrides((prev) => ({ ...prev, avatarUrl: previous })); // batalkan
+      Alert.alert('Gagal', e instanceof Error ? e.message : 'Foto profil gagal diunggah');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
   };
 
   const confirmLogout = () => {
@@ -49,15 +72,15 @@ export default function ProfileScreen() {
             </AppText>
           </View>
 
-          {/* Kartu Profil */}
           <ProfileCard
             user={user}
             errorMessage={result.status === 'error' ? result.error.message : undefined}
+            isUploadingAvatar={isUploadingAvatar}
             onEditPress={() => setIsEditModalVisible(true)}
+            onAvatarPress={handleChangeAvatar}
             onReload={reload}
           />
 
-          {/* Pengaturan Akun */}
           <AccountSettings
             onOpenEditProfile={() => setIsEditModalVisible(true)}
             notificationsEnabled={notificationsEnabled}
@@ -67,7 +90,6 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
 
-      {/* Modal Edit Nama & Email */}
       <EditProfileModal
         visible={isEditModalVisible}
         initialName={user?.name ?? ''}

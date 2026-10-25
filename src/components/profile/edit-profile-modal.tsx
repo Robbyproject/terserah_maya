@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
-    Alert,
-    KeyboardAvoidingView,
-    Modal,
-    Platform,
-    TextInput,
-    View,
+  Alert,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  TextInput,
+  View,
 } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
@@ -31,11 +31,16 @@ export function EditProfileModal({
 }: EditProfileModalProps) {
   const [name, setName] = useState(initialName);
   const [email, setEmail] = useState(initialEmail);
+  const [wasVisible, setWasVisible] = useState(visible);
 
-  useEffect(() => {
-    setName(initialName);
-    setEmail(initialEmail);
-  }, [initialName, initialEmail, visible]);
+  // Isi ulang form saat modal baru dibuka (pola resmi React, tanpa useEffect).
+  if (visible !== wasVisible) {
+    setWasVisible(visible);
+    if (visible) {
+      setName(initialName);
+      setEmail(initialEmail);
+    }
+  }
 
   const handleSave = () => {
     const trimmedName = name.trim();
@@ -51,11 +56,7 @@ export function EditProfileModal({
   };
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onClose}>
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onClose}>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.modalOverlay}>

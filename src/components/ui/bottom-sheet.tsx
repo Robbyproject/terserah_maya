@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/immutability */
 import { BlurView } from 'expo-blur';
 import {
   createContext,

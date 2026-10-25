@@ -152,3 +152,31 @@ export async function resetPassword(email: string, newPassword: string): Promise
     throw new Error(data.message || 'Gagal mereset kata sandi');
   }
 }
+// Ganti Foto Profil (upload multipart)
+export async function updateUserAvatar(userId: string, localUri: string): Promise<User> {
+  const token = await getAuthToken();
+
+  const form = new FormData();
+  form.append('avatar', {
+    uri: localUri,
+    name: 'avatar.jpg',
+    type: 'image/jpeg',
+  } as unknown as Blob);
+
+  const res = await fetch(`${API_BASE_URL}/profile/${userId}/avatar`, {
+    method: 'PUT',
+    // Jangan set Content-Type manual, biar boundary multipart diisi otomatis.
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.message || 'Gagal mengunggah foto profil');
+  }
+
+  const current = await getCurrentUser();
+  const updatedUser: User = { ...current, avatarUrl: data.avatarUrl };
+  await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+  return updatedUser;
+}
