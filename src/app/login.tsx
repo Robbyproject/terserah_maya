@@ -3,7 +3,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import {
-  Alert,
   ScrollView,
   Text,
   TextInput,
@@ -41,14 +40,9 @@ export default function LoginScreen() {
 
     if (userFound) {
       setErrorMsg('');
-      Alert.alert('Berhasil Login', `Selamat datang kembali, ${userFound.name}!`, [
-        {
-          text: 'OK',
-          onPress: () => {
-            router.replace('/home' as any);
-          },
-        },
-      ]);
+      // Jangan taruh navigasi di dalam callback Alert: di react-native-web
+      // Alert.alert() no-op, jadi tombol "Masuk" tidak pernah lanjut.
+      router.replace('/home' as any);
     } else {
       setErrorMsg('Email/Username atau kata sandi salah!');
     }

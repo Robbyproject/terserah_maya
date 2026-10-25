@@ -104,7 +104,7 @@ export function RestaurantCard({
 
         {hasPrice || hasDistance ? (
           <View style={styles.metaRow}>
-            {hasPrice ? (
+            {restaurant.price ? (
               <AppText variant="labelSm" color={Colors.primary} style={styles.price}>
                 {formatPriceRange(restaurant.price)}
               </AppText>

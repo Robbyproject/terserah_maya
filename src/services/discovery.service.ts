@@ -5,28 +5,50 @@ import { simulateNetwork } from '@/mocks/delay';
 import { mockRestaurants } from '@/mocks/restaurants';
 import { mockSponsors } from '@/mocks/sponsors';
 import type { MatchCriteria, Restaurant, Sponsor } from '@/types';
-
-export function getSponsors(): Promise<Sponsor[]> {
-  return simulateNetwork(mockSponsors, 450);
-}
+import { getActiveLocation } from './location.service';
 
 const NEARBY_PICKS_LIMIT = 3;
 
-export function getNearbyPicks(): Promise<Restaurant[]> {
-  return simulateNetwork(mockRestaurants.slice(0, NEARBY_PICKS_LIMIT), 700);
-}
-
-// Contract: GET /restaurants -> Restaurant[] as defined in src/types/restaurant.ts
-// (id, name, category, description, imageUrl, rating, price {min,max}, distanceKm,
-// optional address, closesAt, topPick, budgetTier; topPick shows the "Terfavorit" badge).
-// TODO: confirm endpoint with the backend.
-export function getAllPicks(): Promise<Restaurant[]> {
-  // One switch point: real database when configured, dummy data otherwise.
-  if (API_BASE_URL) {
-    return apiGet<Restaurant[]>('/restaurants');
+export async function getSponsors(): Promise<Sponsor[]> {
+  if (!API_BASE_URL) {
+    return simulateNetwork(mockSponsors, 450);
   }
 
-  return simulateNetwork(mockRestaurants, 700);
+  try {
+    return await apiGet<Sponsor[]>('/api/sponsors');
+  } catch {
+    // Carousel sponsor tidak punya state error; kalau backend mati, tampilkan
+    // promo bawaan daripada skeleton yang menggantung selamanya.
+    return mockSponsors;
+  }
+}
+
+function nearbyPath(location: Awaited<ReturnType<typeof getActiveLocation>>): string {
+  const radius = Math.round(location.radiusKm * 1000);
+  return `/api/restaurants/nearby?lat=${location.latitude}&lng=${location.longitude}&radius=${radius}`;
+}
+
+export async function getNearbyPicks(): Promise<Restaurant[]> {
+  if (!API_BASE_URL) {
+    return simulateNetwork(mockRestaurants.slice(0, NEARBY_PICKS_LIMIT), 700);
+  }
+
+  const location = await getActiveLocation();
+  const restaurants = await apiGet<Restaurant[]>(nearbyPath(location));
+
+  return restaurants.slice(0, NEARBY_PICKS_LIMIT);
+}
+
+// Daftar lengkap untuk halaman /favorites. Bukan katalog global: Google Places
+// mengembalikan maksimal 20 hasil di sekitar lokasi aktif.
+export async function getAllPicks(): Promise<Restaurant[]> {
+  if (!API_BASE_URL) {
+    return simulateNetwork(mockRestaurants, 700);
+  }
+
+  const location = await getActiveLocation();
+
+  return apiGet<Restaurant[]>(nearbyPath(location));
 }
 
 export function spinForMatch(criteria: MatchCriteria): Promise<Restaurant> {

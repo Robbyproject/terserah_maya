@@ -102,13 +102,19 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
           </View>
           <View style={styles.restaurant}>
             <View style={styles.imageWrapper}>
-              <Image
-                source={{ uri: restaurant.imageUrl }}
-                style={styles.image}
-                contentFit="cover"
-                transition={200}
-                accessibilityLabel={restaurant.name}
-              />
+              {restaurant.imageUrl ? (
+                <Image
+                  source={{ uri: restaurant.imageUrl }}
+                  style={styles.image}
+                  contentFit="cover"
+                  transition={200}
+                  accessibilityLabel={restaurant.name}
+                />
+              ) : (
+                <View style={styles.imagePlaceholder} accessibilityLabel={restaurant.name}>
+                  <Icon name="restaurant" size={32} color={Colors.onSurfaceVariant} />
+                </View>
+              )}
               {restaurant.topPick ? (
                 <View style={styles.topPick}>
                   <Icon name="verified" size={14} color={Colors.secondaryContainer} filled />
@@ -117,12 +123,14 @@ export function MatchResultModal({ restaurant, onClose, onRespin }: MatchResultM
                   </AppText>
                 </View>
               ) : null}
-              <View style={styles.rating}>
-                <Icon name="star" size={14} color={Colors.amber} filled />
-                <AppText variant="labelSm" style={styles.bold}>
-                  {restaurant.rating}
-                </AppText>
-              </View>
+              {restaurant.rating != null ? (
+                <View style={styles.rating}>
+                  <Icon name="star" size={14} color={Colors.amber} filled />
+                  <AppText variant="labelSm" style={styles.bold}>
+                    {restaurant.rating}
+                  </AppText>
+                </View>
+              ) : null}
             </View>
             <View style={styles.restaurantCopy}>
               <View style={styles.nameRow}>
@@ -282,6 +290,13 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+  },
+  imagePlaceholder: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.surfaceContainerHigh,
   },
   topPick: {
     position: 'absolute',

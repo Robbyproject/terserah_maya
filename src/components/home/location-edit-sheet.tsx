@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
 import {
-  Alert,
   Keyboard,
   StyleSheet,
   TextInput,
@@ -13,6 +12,7 @@ import { BottomSheet } from '@/components/ui/bottom-sheet';
 import { Icon } from '@/components/ui/icon';
 import { PillButton } from '@/components/ui/pill-button';
 import { PressableScale } from '@/components/ui/pressable-scale';
+import { resolveLocationLabel } from '@/services/location.service';
 import { Colors, Radii, Spacing, Typography } from '@/theme';
 import type { UserLocation } from '@/types';
 
@@ -33,25 +33,35 @@ export function LocationEditSheet({
   const [radiusKm, setRadiusKm] = useState(
     location?.radiusKm ?? 3,
   );
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
-  function saveLocation() {
+  async function saveLocation() {
     const trimmedLabel = label.trim();
 
     if (!trimmedLabel) {
-      Alert.alert(
-        'Lokasi belum diisi',
-        'Masukkan nama lokasi terlebih dahulu.',
-      );
+      setErrorMsg('Masukkan nama lokasi terlebih dahulu.');
       return;
     }
 
     Keyboard.dismiss();
+    setSaving(true);
+    setErrorMsg('');
 
-    onSave({
-      id: location?.id ?? 'loc_custom',
-      label: trimmedLabel,
-      radiusKm,
-    });
+    try {
+      const resolved = await resolveLocationLabel(trimmedLabel, radiusKm);
+      onSave(resolved);
+    } catch (cause) {
+      // Alert tidak dirender di react-native-web, jadi pesan ini juga harus
+      // tampil inline supaya kegagalan tidak terlihat seperti tombol mati.
+      setErrorMsg(
+        cause instanceof Error
+          ? cause.message
+          : 'Coba tulis nama daerah yang lebih spesifik.'
+      );
+    } finally {
+      setSaving(false);
+    }
   }
 
   return (
@@ -88,7 +98,10 @@ export function LocationEditSheet({
 
         <TextInput
           value={label}
-          onChangeText={setLabel}
+          onChangeText={(text) => {
+            setLabel(text);
+            setErrorMsg('');
+          }}
           placeholder="Contoh: Menteng, Jakarta Pusat"
           placeholderTextColor={Colors.onSurfaceVariant}
           returnKeyType="done"
@@ -96,6 +109,12 @@ export function LocationEditSheet({
           style={styles.input}
           accessibilityLabel="Nama lokasi pencarian"
         />
+
+        {errorMsg ? (
+          <AppText variant="bodySm" color={Colors.error}>
+            {errorMsg}
+          </AppText>
+        ) : null}
 
         <AppText variant="labelMd">
           Radius pencarian
@@ -133,6 +152,7 @@ export function LocationEditSheet({
           label="Terapkan Lokasi"
           icon="location_on"
           size="lg"
+          loading={saving}
           onPress={saveLocation}
           style={styles.saveButton}
         />

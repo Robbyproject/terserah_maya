@@ -16,11 +16,13 @@ export function matchesCriteria(restaurant: Restaurant, criteria: MatchCriteria)
   const distance = DISTANCE_OPTIONS.find((option) => option.value === criteria.distance);
   const rating = RATING_OPTIONS.find((option) => option.value === criteria.minRating);
 
-  const withinBudget = budget
-    ? restaurant.price.min <= budget.maxPrice && restaurant.price.max >= budget.minPrice
-    : true;
+  const withinBudget =
+    budget && restaurant.price
+      ? restaurant.price.min <= budget.maxPrice && restaurant.price.max >= budget.minPrice
+      : true;
   const withinDistance = distance ? restaurant.distanceKm <= distance.radiusKm : true;
-  const withinRating = rating ? restaurant.rating >= rating.minRating : true;
+  const withinRating =
+    rating && restaurant.rating != null ? restaurant.rating >= rating.minRating : true;
 
   return withinBudget && withinDistance && withinRating;
 }

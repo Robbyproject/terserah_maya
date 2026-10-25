@@ -29,6 +29,7 @@ const PRICE_LEVEL_MAX: readonly (readonly [number, 1 | 2 | 3 | 4])[] = [
 ];
 
 function toPriceLevel(price: Restaurant['price']): Place['priceLevel'] {
+  if (!price) return 2;
   const level = PRICE_LEVEL_MAX.find(([max]) => price.max <= max)?.[1];
   return level ?? 4;
 }
@@ -71,14 +72,18 @@ export function restaurantToPlace(restaurant: Restaurant): Place {
     id: restaurant.id,
     name: restaurant.name,
     category: restaurant.category,
-    rating: restaurant.rating,
-    reviewCount: toReviewCount(restaurant.id),
+    rating: restaurant.rating ?? 0,
+    reviewCount: restaurant.reviewCount ?? toReviewCount(restaurant.id),
     priceLevel: toPriceLevel(restaurant.price),
     address: restaurant.address ?? 'Alamat belum tersedia',
-    photos: [{ uri: restaurant.imageUrl, attribution: 'Google Maps' }],
-    isOpenNow: true,
+    photos: restaurant.imageUrl
+      ? [{ uri: restaurant.imageUrl, attribution: 'Google Maps' }]
+      : [],
+    isOpenNow: restaurant.isOpenNow ?? true,
     statusText: closesAt ? `Buka sampai ${closesAt}` : 'Buka hari ini',
     hoursByDay: toHoursByDay(closesAt),
     travel: toTravel(restaurant.distanceKm),
+    phone: restaurant.phone,
+    website: restaurant.website,
   };
 }
